@@ -17,6 +17,7 @@ public class NetworkPlayer : MonoBehaviour
     public int ID;
 
     public float InterVel = 5;
+    public float HandInterVel = 5;
     public PlayerData playerData = null;
 
     public Transform RH, LH;
@@ -42,8 +43,8 @@ public class NetworkPlayer : MonoBehaviour
         else
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.Position, InterVel * Time.deltaTime);
-            RH.position = transform.position + playerData.RHPosition;
-            LH.position = transform.position + playerData.LHPosition;
+            RH.position = Vector3.Lerp(RH.position, transform.position + playerData.RHPosition, HandInterVel * Time.deltaTime);
+            LH.position = Vector3.Lerp(LH.position, transform.position + playerData.LHPosition, HandInterVel * Time.deltaTime);
 
             transform.localRotation = playerData.Rotation;
             RH.localRotation = playerData.RHRotation;
