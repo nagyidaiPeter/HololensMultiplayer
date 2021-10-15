@@ -16,7 +16,7 @@ public class NetworkPlayer : MonoBehaviour
 {
     public int ID;
 
-    public float InterVel = 5;
+    public float InterVel = 35;
     public float HandInterVel = 5;
     public PlayerData playerData = null;
 

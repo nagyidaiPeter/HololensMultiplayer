@@ -288,5 +288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   InterVel: 40
+  HandInterVel: 35
   RH: {fileID: 7901440451260767626}
   LH: {fileID: 5017843195710329464}
