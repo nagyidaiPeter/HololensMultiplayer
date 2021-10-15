@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package hrm;
-
-import "Common.proto";
-
-message Welcome {
-    int32 id = 1;
-}

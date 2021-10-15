@@ -1,6 +1,11 @@
-using Google.Protobuf;
+using Assets.Scripts.SERVER;
 
-using Hrm;
+using hololensMulti;
+
+using hololensMultiplayer;
+using hololensMultiplayer.Models;
+
+using Lidgren.Network;
 
 using System;
 using System.Collections;
@@ -8,62 +13,75 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using Zenject;
+
 public class LocalPlayer : MonoBehaviour
 {
     public Transform qrPos;
-    public GameClient client;
-    public int id = -1;
-    
-    void Start()
+
+    [Inject]
+    private DataManager dataManager;
+
+    [Inject]
+    private NetClient netclientclient;
+
+    private Client client;
+
+    public bool HaveRH, HaveLH = false;
+    public Transform RH, LH;
+
+    public void SetRightHand(bool state)
     {
-        NetworkHandler.Processors[MessageTypes.Welcome].ReceivedMessageEvent += WelcomeReceived;
-        client = FindObjectOfType<GameClient>();
+        HaveRH = state;
     }
 
-    private void WelcomeReceived(object msg)
+    public void SetLeftHand(bool state)
     {
-        if (msg is Welcome welcome)
-        {
-            id = welcome.Id;
-        }
+        HaveLH = state;
     }
+
+
+    void Start()
+    {
+        dataManager.LocalPlayer = new PlayerData();
+        dataManager.LocalPlayer.playerObject = gameObject;
+
+        client = FindObjectOfType<Client>(true);
+    }
+
 
     void Update()
     {
-        if (id >= 0)
+        if (netclientclient.ConnectionStatus == NetConnectionStatus.Connected && dataManager.LocalPlayer != null && dataManager.LocalPlayer.playerObject.activeSelf)
         {
             PlayerTransform playerTransform = new PlayerTransform();
-            playerTransform.Id = id;
+            playerTransform.SenderID = dataManager.LocalPlayer.ID;
 
             Vector3 qrRelativePos = transform.localPosition - qrPos.localPosition;
-            playerTransform.Position = new Point3D()
+            playerTransform.Pos = qrRelativePos;
+            playerTransform.Rot = transform.localRotation;
+            
+            if (RH != null)
             {
-                X = qrRelativePos.x,
-                Y = qrRelativePos.y,
-                Z = qrRelativePos.z
-            };
-
-            playerTransform.Rotation = new Point4D()
+                playerTransform.RHPos = RH.position - transform.position;
+                playerTransform.RHRot = RH.localRotation;
+            }
+            else
             {
-                X = transform.localRotation.x,
-                Y = transform.localRotation.y,
-                Z = transform.localRotation.z,
-                W = transform.localRotation.w
-            };
+                RH = transform.parent.Find("Right_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
+            }
 
-
-            playerTransform.RightHandPosition = new Point3D()
+            if (LH != null)
             {
-                X = qrRelativePos.x,
-                Y = qrRelativePos.y,
-                Z = qrRelativePos.z
-            };
+                playerTransform.LHPos = LH.position - transform.position;
+                playerTransform.LHRot = LH.localRotation;
+            }
+            else
+            {
+                LH = transform.parent.Find("Left_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
+            }
 
-            Message msg = new Message();
-            msg.Identifier = (int)MessageTypes.PlayerTransform;
-            msg.Data = playerTransform.ToByteString();
-
-            NetworkHandler.Processors[MessageTypes.PlayerTransform].AddOutMessage(msg); 
+            client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(playerTransform);
         }
     }
 }

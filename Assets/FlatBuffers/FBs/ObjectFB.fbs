@@ -1,0 +1,11 @@
+﻿include "Definitions.fbs";
+
+namespace hololensMulti;
+
+table ObjectFB {
+  ObjectID:int;
+  Pos:Vec3;
+  Rot:Quat;
+}
+
+root_type ObjectFB;

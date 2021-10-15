@@ -1,0 +1,17 @@
+﻿include "Definitions.fbs";
+
+namespace hololensMulti;
+
+table TransformFB {
+  PlayerID:int;
+  Pos:Vec3;
+  Rot:Quat;
+
+  RHPos:Vec3;
+  RHRot:Quat;
+
+  LHPos:Vec3;
+  LHRot:Quat;
+}
+
+root_type TransformFB;

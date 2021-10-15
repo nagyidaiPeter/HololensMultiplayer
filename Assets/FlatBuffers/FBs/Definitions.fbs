@@ -1,0 +1,15 @@
+﻿namespace hololensMulti;
+
+struct Vec3 {
+  x:float;
+  y:float;
+  z:float;
+}
+
+struct Quat {
+  x:float;
+  y:float;
+  z:float;
+  w:float;
+}
+
