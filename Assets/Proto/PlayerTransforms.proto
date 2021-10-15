@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package hrm;
+
+import "Common.proto";
+
+message PlayerTransform {
+    int32 id = 1;
+    Point3D position = 2;
+    Point4D rotation = 3;
+	
+	Point3D rightHandPosition = 4;
+    Point4D rightHandRotation = 5;
+	
+	Point3D leftHandposition = 6;
+    Point4D leftHandrotation = 7;
+}

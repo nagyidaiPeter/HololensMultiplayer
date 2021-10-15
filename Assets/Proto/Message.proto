@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package hrm;
+
+message Message 
+{
+    int32 identifier = 1;
+	int32 peerId = 1;
+    bytes data = 2;
+}
