@@ -4,8 +4,11 @@ namespace hololensMulti;
 
 table ObjectFB {
   ObjectID:int;
+  ObjectType:string;
+  OwnerID:int;
   Pos:Vec3;
   Rot:Quat;
+  Scale:Vec3;
 }
 
 root_type ObjectFB;

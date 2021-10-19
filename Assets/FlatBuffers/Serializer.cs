@@ -29,6 +29,26 @@ public class Serializer
         return builder.SizedByteArray();
     }
 
+    public static byte[] SerializeObjectTransform(ObjectTransformMsg objectTransform)
+    {
+        var builder = new FlatBufferBuilder(1);
+        var objectTypeOffset = builder.CreateString(objectTransform.ObjectType);
+
+        ObjectFB.StartObjectFB(builder);
+
+        ObjectFB.AddObjectID(builder, objectTransform.ObjectID);
+        ObjectFB.AddObjectType(builder, objectTypeOffset);
+        ObjectFB.AddPos(builder, Vec3.CreateVec3(builder, objectTransform.Pos.x, objectTransform.Pos.y, objectTransform.Pos.z));
+        ObjectFB.AddRot(builder, Quat.CreateQuat(builder, objectTransform.Rot.x, objectTransform.Rot.y, objectTransform.Rot.z, objectTransform.Rot.w));
+        ObjectFB.AddScale(builder, Vec3.CreateVec3(builder, objectTransform.Scale.x, objectTransform.Scale.y, objectTransform.Scale.z));
+        ObjectFB.AddOwnerID(builder, objectTransform.OwnerID);
+
+        var offset = ObjectFB.EndObjectFB(builder);
+        ObjectFB.FinishObjectFBBuffer(builder, offset);
+
+        return builder.SizedByteArray();
+    }
+
     public static byte[] SerializeWelcome(Welcome welcome)
     {
         var builder = new FlatBufferBuilder(1);
@@ -41,6 +61,20 @@ public class Serializer
 
         var offset = WelcomeFB.EndWelcomeFB(builder);
         WelcomeFB.FinishWelcomeFBBuffer(builder, offset);
+
+        return builder.SizedByteArray();
+    }
+
+    public static byte[] SerializeDisconnect(DisconnectMessage disconnect)
+    {
+        var builder = new FlatBufferBuilder(1);
+        
+        DisconnectFB.StartDisconnectFB(builder);
+
+        DisconnectFB.AddPlayerID(builder, disconnect.SenderID);
+        
+        var offset = DisconnectFB.EndDisconnectFB(builder);
+        DisconnectFB.FinishDisconnectFBBuffer(builder, offset);
 
         return builder.SizedByteArray();
     }

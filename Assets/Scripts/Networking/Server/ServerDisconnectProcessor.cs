@@ -42,12 +42,12 @@ namespace Assets.Scripts.SERVER.Processors
             while (OutgoingMessages.Any())
             {
                 var msg = netServer.CreateMessage();
-                var registerMsg = OutgoingMessages.Dequeue();
+                var dcMsg = OutgoingMessages.Dequeue();
+                var serializedMsg = Serializer.SerializeDisconnect(dcMsg);
 
-                var body = JsonConvert.SerializeObject(registerMsg);
                 msg.Write((byte)MessageTypes.Disconnect);
-                msg.Write(body.Length);
-                msg.Write(body);
+                msg.Write(serializedMsg.Length);
+                msg.Write(serializedMsg);
 
                 netServer.SendToAll(msg, NetDeliveryMethod.ReliableOrdered, 0);
             }
@@ -60,7 +60,13 @@ namespace Assets.Scripts.SERVER.Processors
 
         public override bool AddOutMessage(BaseMessageType objectToSend)
         {
-            throw new NotImplementedException();
+            if (objectToSend is DisconnectMessage dcMsg)
+            {
+                OutgoingMessages.Enqueue(dcMsg);
+                return true;
+            }
+
+            return false;
         }
     }
 }

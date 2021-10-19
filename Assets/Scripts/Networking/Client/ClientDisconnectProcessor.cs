@@ -10,6 +10,8 @@ using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
+using FlatBuffers;
+using hololensMulti;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -32,8 +34,7 @@ namespace Assets.Scripts.SERVER.Processors
                 var player = dataManager.GetPlayerById(dcMsg.SenderID);
 
                 dataManager.Players.Remove(player.ID);
-                Transform.Destroy(player.playerObject);
-                OutgoingMessages.Enqueue(dcMsg);
+                GameObject.Destroy(player.playerObject);
             }
         }
 
@@ -55,12 +56,19 @@ namespace Assets.Scripts.SERVER.Processors
 
         public override bool AddInMessage(byte[] message, PlayerData player)
         {
-            throw new NotImplementedException();
+            ByteBuffer bb = new ByteBuffer(message);
+            DisconnectFB disconnectFB = DisconnectFB.GetRootAsDisconnectFB(bb);
+            DisconnectMessage dcMsg = new DisconnectMessage();
+
+            dcMsg.SenderID = disconnectFB.PlayerID;
+
+            IncomingMessages.Enqueue(dcMsg);
+            return true;
         }
 
         public override bool AddOutMessage(BaseMessageType objectToSend)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

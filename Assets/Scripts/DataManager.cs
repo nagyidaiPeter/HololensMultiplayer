@@ -1,4 +1,5 @@
 ﻿using hololensMultiplayer;
+using hololensMultiplayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace hololensMultiplayer
     public class DataManager
     {
         public Dictionary<int, PlayerData> Players = new Dictionary<int, PlayerData>();
-
+        public Dictionary<int, ObjectData> Objects = new Dictionary<int, ObjectData>();
         public PlayerData LocalPlayer;
       
         public bool Welcomed = false;
@@ -34,7 +35,6 @@ namespace hololensMultiplayer
                     StartingServerEvent?.Invoke();
             }
         }
-
 
         public PlayerData GetPlayerById(int ID)
         {

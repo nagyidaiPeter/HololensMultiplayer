@@ -12,7 +12,8 @@ namespace hololensMultiplayer.Models
         PlayerTransform,
         Welcome,
         PlayerInfo,
-        Disconnect
+        Disconnect,
+        ObjectTransform
     }
 
     public class BaseMessageType

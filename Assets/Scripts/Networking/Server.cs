@@ -28,13 +28,15 @@ namespace hololensMultiplayer
         private DataManager dataManager;
 
         public Server(NetServer serverPeer, ServerPlayTransProcessor playerTransformProc, ServerWelcomeProcessor serverWelcomeProcessor,
-            DataManager dataMan)
+            ServerDisconnectProcessor disconnectProcessor, ServerObjectProcessor objectProcessor, DataManager dataMan)
         {
             server = serverPeer;
             dataManager = dataMan;
 
             MessageProcessors.Add(MessageTypes.PlayerTransform, playerTransformProc);
             MessageProcessors.Add(MessageTypes.Welcome, serverWelcomeProcessor);
+            MessageProcessors.Add(MessageTypes.Disconnect, disconnectProcessor);
+            MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
         }
 
         public void StartServer()
@@ -117,9 +119,8 @@ namespace hololensMultiplayer
                                 {
                                     DisconnectMessage disconnectMessage = new DisconnectMessage();
                                     disconnectMessage.DisconnectedUserID = player.ID;
-                                    //var dcText = JsonConvert.SerializeObject(disconnectMessage);
-                                    //todo: change to flatbuffer
-                                    //MessageProcessors[MessageTypes.Disconnect].AddMessage(dcText, player);
+
+                                    MessageProcessors[MessageTypes.Disconnect].AddOutMessage(disconnectMessage);
                                 }
                                 break;
                         }

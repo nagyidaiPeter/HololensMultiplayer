@@ -26,7 +26,6 @@ namespace hololensMultiplayer
         public Vector3 LHPosition = new Vector3();
         public Quaternion LHRotation = new Quaternion();
 
-
         public GameObject playerObject;
 
         public PlayerData()

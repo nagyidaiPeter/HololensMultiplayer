@@ -27,19 +27,7 @@ public class LocalPlayer : MonoBehaviour
 
     private Client client;
 
-    public bool HaveRH, HaveLH = false;
     public Transform RH, LH;
-
-    public void SetRightHand(bool state)
-    {
-        HaveRH = state;
-    }
-
-    public void SetLeftHand(bool state)
-    {
-        HaveLH = state;
-    }
-
 
     void Start()
     {
@@ -57,7 +45,7 @@ public class LocalPlayer : MonoBehaviour
             PlayerTransform playerTransform = new PlayerTransform();
             playerTransform.SenderID = dataManager.LocalPlayer.ID;
 
-            Vector3 qrRelativePos = transform.localPosition - qrPos.localPosition;
+            Vector3 qrRelativePos = transform.position - qrPos.position;
             playerTransform.Pos = qrRelativePos;
             playerTransform.Rot = transform.localRotation;
             
@@ -68,6 +56,8 @@ public class LocalPlayer : MonoBehaviour
             }
             else
             {
+
+                //todo: Find something less retarded, this was used since handconstraint returned offseted transform...
                 RH = transform.parent.Find("Right_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
             }
 

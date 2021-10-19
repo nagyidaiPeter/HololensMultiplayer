@@ -25,7 +25,6 @@ public class Client : MonoBehaviour
 {
     public bool ClientIsServer = false;
 
-    public float Interpol = 0.5f;
     public string Address = "127.0.0.1:12345";
 
     private NetClient client;
@@ -38,7 +37,7 @@ public class Client : MonoBehaviour
 
     [Inject]
     public void Init(NetClient client, DataManager dataManager, ClientPlayTransProcessor clientPlayTransProcessor, ClientDisconnectProcessor clientDisconnect,
-        ClientWelcomeProcessor clientWelcome)
+        ClientWelcomeProcessor clientWelcome, ClientObjectProcessor objectProcessor)
     {
         this.client = client;
         this.dataManager = dataManager;
@@ -46,6 +45,7 @@ public class Client : MonoBehaviour
         MessageProcessors.Add(MessageTypes.PlayerTransform, clientPlayTransProcessor);
         MessageProcessors.Add(MessageTypes.Welcome, clientWelcome);
         MessageProcessors.Add(MessageTypes.Disconnect, clientDisconnect);
+        MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
     }
 
     public void SetAddress(string address)

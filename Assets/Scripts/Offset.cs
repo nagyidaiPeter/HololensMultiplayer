@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Offset : MonoBehaviour
 {
+    public Transform QR;
 
     void Update()
     {
-        transform.localPosition = -transform.parent.position;
-        transform.localEulerAngles = Vector3.zero;
+        transform.position = transform.parent.position;
+        transform.rotation = Quaternion.identity;
     }
 }

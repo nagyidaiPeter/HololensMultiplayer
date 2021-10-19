@@ -423,7 +423,7 @@ Transform:
   m_LocalScale: {x: 0.05, y: 0.001, z: 0.05}
   m_Children: []
   m_Father: {fileID: 958257484}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &857815763
 MeshRenderer:
@@ -755,6 +755,7 @@ GameObject:
   - component: {fileID: 958257485}
   - component: {fileID: 958257487}
   - component: {fileID: 958257486}
+  - component: {fileID: 958257489}
   m_Layer: 0
   m_Name: NetworkSpace
   m_TagString: Untagged
@@ -773,10 +774,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1362772051}
   - {fileID: 857815762}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &958257485
 MonoBehaviour:
@@ -804,7 +804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunningServer: 0
-  UpdateTime: 0.00833
+  UpdateTime: 0.01666
 --- !u!114 &958257487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -818,7 +818,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClientIsServer: 0
-  Interpol: 0.5
   Address: 127.0.0.1:12345
   UpdateTime: 0.01666
 --- !u!114 &958257488
@@ -831,6 +830,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d513bae11739f3498ca4a03da6bb814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &958257489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958257483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b42223493e6db4eb6b06aeab6e260f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &963194225
@@ -990,8 +1001,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   qrPos: {fileID: 857815762}
-  HaveRH: 0
-  HaveLH: 0
   RH: {fileID: 0}
   LH: {fileID: 0}
 --- !u!1 &1068009935
@@ -1305,8 +1314,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
-  m_Father: {fileID: 958257484}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1362772052
 MonoBehaviour:
@@ -1347,6 +1356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eb91efb9914c844697733f3ff234064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QR: {fileID: 857815762}
 --- !u!1 &1640068552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,7 +1783,7 @@ Transform:
   m_Children:
   - {fileID: 1764877990}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2111510364
 GameObject:

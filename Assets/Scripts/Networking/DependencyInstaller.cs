@@ -22,14 +22,17 @@ public class DependencyInstaller : MonoInstaller
         Container.Bind<ServerPlayTransProcessor>().AsSingle().NonLazy();
         Container.Bind<ServerWelcomeProcessor>().AsSingle().NonLazy();
         Container.Bind<ServerDisconnectProcessor>().AsSingle().NonLazy();
+        Container.Bind<ServerObjectProcessor>().AsSingle().NonLazy();
 
         //Client processors
         Container.Bind<ClientPlayTransProcessor>().AsSingle().NonLazy();
         Container.Bind<ClientWelcomeProcessor>().AsSingle().NonLazy();
         Container.Bind<ClientDisconnectProcessor>().AsSingle().NonLazy();
+        Container.Bind<ClientObjectProcessor>().AsSingle().NonLazy();
 
 
         Container.BindFactory<string, NetworkPlayer, NetworkPlayer.Factory>().FromFactory<PrefabResourceFactory<NetworkPlayer>>();
+        Container.BindFactory<UnityEngine.Object, NetworkObject, NetworkObject.ObjectFactory>().FromFactory<NetworkObject.ObjectFactory>();
     }
 
     class NetClientFactory : IFactory<NetClient>

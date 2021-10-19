@@ -1,0 +1,9 @@
+﻿include "Definitions.fbs";
+
+namespace hololensMulti;
+
+table DisconnectFB {
+  PlayerID:int;
+}
+
+root_type DisconnectFB;
