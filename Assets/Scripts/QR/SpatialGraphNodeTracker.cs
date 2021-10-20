@@ -36,7 +36,7 @@ namespace QRTracking
             {
                 transform.SetPositionAndRotation(pose.position, pose.rotation);
                 transform.Rotate(new Vector3(90, 0, 0));
-                //transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             }
         }
 
