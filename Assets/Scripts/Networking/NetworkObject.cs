@@ -39,18 +39,9 @@ public class NetworkObject : MonoBehaviour
     {
         if (OwnerID != dataManager.LocalPlayer.ID)
         {
-            if (Vector3.Distance(new Vector3(objectData.Position.x, objectData.Position.y, objectData.Position.z), transform.localPosition) > 1.5f)
-            {
-                transform.localPosition = objectData.Position;
-                transform.localRotation = objectData.Rotation;
-                transform.localScale = objectData.Scale;
-            }
-            else
-            {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, objectData.Position, InterVel * Time.deltaTime);
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, objectData.Rotation, InterVel * Time.deltaTime);
-                transform.localScale = Vector3.Lerp(transform.localScale, objectData.Scale, InterVel * Time.deltaTime);
-            }
+            transform.localPosition = objectData.Position;
+            transform.localRotation = objectData.Rotation;
+            transform.localScale = objectData.Scale;
         }
         else
         {

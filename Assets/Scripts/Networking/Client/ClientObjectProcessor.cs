@@ -73,6 +73,9 @@ namespace Assets.Scripts.SERVER.Processors
                 var objectTransformMsg = IncomingMessages.Dequeue();
                 if (dataManager.Objects.ContainsKey(objectTransformMsg.ObjectID))
                 {
+                    if (objectTransformMsg.OwnerID == -1 && dataManager.IsServer)
+                        return;
+
                     var objectTransform = dataManager.Objects[objectTransformMsg.ObjectID];
                     objectTransform.ID = objectTransformMsg.ObjectID;
                     objectTransform.OwnerID = objectTransformMsg.OwnerID;
