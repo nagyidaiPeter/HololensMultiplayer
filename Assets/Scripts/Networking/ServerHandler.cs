@@ -42,6 +42,7 @@ public class ServerHandler : MonoBehaviour
         dataManager.IsServer = true;
 
         GetComponent<ObjectSpawner>().SpawnObject("CoffeeCup");
+        GetComponent<ObjectSpawner>().SpawnObject("Cheese");
 
     }
 
