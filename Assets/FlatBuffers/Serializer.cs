@@ -16,6 +16,7 @@ public class Serializer
         TransformFB.AddPlayerID(builder, player.SenderID);
         TransformFB.AddPos(builder, Vec3.CreateVec3(builder, player.Pos.x, player.Pos.y, player.Pos.z));
         TransformFB.AddRot(builder, Quat.CreateQuat(builder, player.Rot.x, player.Rot.y, player.Rot.z, player.Rot.w));
+        TransformFB.AddQrOffset(builder, Vec3.CreateVec3(builder, player.QrOffset.x, player.QrOffset.y, player.QrOffset.z));
 
         TransformFB.AddRHPos(builder, Vec3.CreateVec3(builder, player.RHPos.x, player.RHPos.y, player.RHPos.z));
         TransformFB.AddRHRot(builder, Quat.CreateQuat(builder, player.RHRot.x, player.RHRot.y, player.RHRot.z, player.RHRot.w));

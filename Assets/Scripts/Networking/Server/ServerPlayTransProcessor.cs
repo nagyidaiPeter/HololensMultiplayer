@@ -46,6 +46,9 @@ namespace Assets.Scripts.SERVER.Processors
             if (transformFB.Rot.HasValue)
                 playerTransform.Rot = new Quaternion(transformFB.Rot.Value.X, transformFB.Rot.Value.Y, transformFB.Rot.Value.Z, transformFB.Rot.Value.W);
 
+            if (transformFB.QrOffset.HasValue)
+                playerTransform.QrOffset = new Vector3(transformFB.QrOffset.Value.X, transformFB.QrOffset.Value.Y, transformFB.QrOffset.Value.Z);
+
             if (transformFB.RHPos.HasValue)
                 playerTransform.RHPos = new Vector3(transformFB.RHPos.Value.X, transformFB.RHPos.Value.Y, transformFB.RHPos.Value.Z);
 
@@ -70,6 +73,7 @@ namespace Assets.Scripts.SERVER.Processors
                 var player = dataManager.Players[transformMsg.SenderID];
                 player.Position = transformMsg.Pos;
                 player.Rotation = transformMsg.Rot;
+                player.QrOffset = transformMsg.QrOffset;
 
                 player.RHPosition = transformMsg.RHPos;
                 player.RHRotation = transformMsg.RHRot;
@@ -96,6 +100,7 @@ namespace Assets.Scripts.SERVER.Processors
                 PlayerTransform playerTransform = new PlayerTransform();
                 playerTransform.Pos = otherPlayer.Position;
                 playerTransform.Rot = otherPlayer.Rotation;
+                playerTransform.QrOffset = otherPlayer.QrOffset;
 
                 playerTransform.RHPos = otherPlayer.RHPosition;
                 playerTransform.RHRot = otherPlayer.RHRotation;

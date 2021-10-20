@@ -48,6 +48,7 @@ public class LocalPlayer : MonoBehaviour
             Vector3 qrRelativePos = (transform.position - transform.parent.position) - qrPos.position;
             playerTransform.Pos = qrPos.parent.InverseTransformPoint(qrRelativePos);
             playerTransform.Rot = transform.localRotation;
+            playerTransform.QrOffset = qrPos.parent.eulerAngles;
 
             if (RH != null)
             {

@@ -9,7 +9,6 @@ public class Offset : MonoBehaviour
 
     void Update()
     {
-        transform.position = -qr.position;
-        transform.eulerAngles= qr.parent.eulerAngles;
+        transform.position = -qr.position;        
     }
 }

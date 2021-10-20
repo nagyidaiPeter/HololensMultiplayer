@@ -31,6 +31,7 @@ public class NetworkPlayer : MonoBehaviour
         {
             transform.localPosition = playerData.Position;
             transform.localRotation = playerData.Rotation;
+            transform.localEulerAngles -= playerData.QrOffset;
 
             if (RH != null)
             {
@@ -47,7 +48,8 @@ public class NetworkPlayer : MonoBehaviour
         else
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.Position, InterVel * Time.deltaTime);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, playerData.Rotation, InterVel * Time.deltaTime);
+            transform.localRotation = playerData.Rotation;
+            transform.localEulerAngles -= playerData.QrOffset;
 
             if (RH != null)
             {

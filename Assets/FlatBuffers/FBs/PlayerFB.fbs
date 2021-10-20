@@ -5,6 +5,7 @@ namespace hololensMulti;
 table TransformFB {
   PlayerID:int;
   Pos:Vec3;
+  QrOffset:Vec3;
   Rot:Quat;
 
   RHPos:Vec3;
