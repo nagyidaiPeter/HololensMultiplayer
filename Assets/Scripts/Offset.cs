@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Offset : MonoBehaviour
 {
+
+    public Transform qr;
+
     void Update()
     {
-        transform.localEulerAngles = -transform.parent.eulerAngles;
+        transform.position = -qr.position;
     }
 }
