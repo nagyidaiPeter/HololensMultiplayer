@@ -56,7 +56,6 @@ public class LocalPlayer : MonoBehaviour
             }
             else
             {
-
                 //todo: Find something less retarded, this was used since handconstraint returned offseted transform...
                 RH = transform.parent.Find("Right_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
             }
