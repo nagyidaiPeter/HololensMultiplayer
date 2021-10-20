@@ -7,9 +7,8 @@ namespace hololensMulti
 
 using global::System;
 using global::FlatBuffers;
-    using hololensMultiplayer.Models;
 
-    public struct MessageFB : IFlatbufferObject
+public struct MessageFB : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
@@ -20,13 +19,7 @@ using global::FlatBuffers;
   public MessageFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte MessageType { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-
-        internal static void AddMessageType(FlatBufferBuilder msgbuilder, MessageTypes playerTransform)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte Data(int j) { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public byte Data(int j) { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
   public int DataLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDataBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -56,6 +49,7 @@ using global::FlatBuffers;
   }
   public static void FinishMessageFBBuffer(FlatBufferBuilder builder, Offset<hololensMulti.MessageFB> offset) { builder.Finish(offset.Value); }
   public static void FinishSizePrefixedMessageFBBuffer(FlatBufferBuilder builder, Offset<hololensMulti.MessageFB> offset) { builder.FinishSizePrefixed(offset.Value); }
-}
+};
+
 
 }

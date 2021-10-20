@@ -27,27 +27,39 @@ public class NetworkPlayer : MonoBehaviour
 
     void Update()
     {
-        if (Vector3.Distance(new Vector3(playerData.Position.x, playerData.Position.y, playerData.Position.z), transform.localPosition) > 1.5f)
+        if (Vector3.Distance(new Vector3(playerData.Position.x, playerData.Position.y, playerData.Position.z), transform.position) > 1.5f)
         {
             transform.localPosition = playerData.Position;
             transform.localRotation = playerData.Rotation;
 
-            RH.position = transform.position + playerData.RHPosition;
-            RH.localRotation = playerData.RHRotation;
+            if (RH != null)
+            {
+                RH.position = transform.position + playerData.RHPosition;
+                RH.localRotation = playerData.RHRotation;
+            }
 
-            LH.position = transform.position + playerData.LHPosition;
-            LH.localRotation = playerData.LHRotation;
+            if (LH != null)
+            {
+                LH.position = transform.position + playerData.LHPosition;
+                LH.localRotation = playerData.LHRotation;
+            }
         }
         else
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.Position, InterVel * Time.deltaTime);
             transform.localRotation = Quaternion.Lerp(transform.localRotation, playerData.Rotation, InterVel * Time.deltaTime);
 
-            RH.position = Vector3.Lerp(RH.position, transform.position + playerData.RHPosition, HandInterVel * Time.deltaTime);
-            RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.RHRotation, HandInterVel * Time.deltaTime);
+            if (RH != null)
+            {
+                RH.position = Vector3.Lerp(RH.position, transform.position + playerData.RHPosition, HandInterVel * Time.deltaTime);
+                RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.RHRotation, HandInterVel * Time.deltaTime);
+            }
 
-            LH.position = Vector3.Lerp(LH.position, transform.position + playerData.LHPosition, HandInterVel * Time.deltaTime);
-            LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.LHRotation, HandInterVel * Time.deltaTime);
+            if (LH != null)
+            {
+                LH.position = Vector3.Lerp(LH.position, transform.position + playerData.LHPosition, HandInterVel * Time.deltaTime);
+                LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.LHRotation, HandInterVel * Time.deltaTime);
+            }
         }
     }
 

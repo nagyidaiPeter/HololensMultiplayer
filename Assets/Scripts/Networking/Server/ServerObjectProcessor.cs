@@ -40,6 +40,7 @@ namespace Assets.Scripts.SERVER.Processors
 
             objectTransform.SenderID = player.ID;
             objectTransform.OwnerID = transformFB.OwnerID;
+            objectTransform.ObjectID = transformFB.ObjectID;
 
             if (transformFB.Pos.HasValue)
                 objectTransform.Pos = new Vector3(transformFB.Pos.Value.X, transformFB.Pos.Value.Y, transformFB.Pos.Value.Z);
@@ -59,11 +60,14 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var transformMsg = IncomingMessages.Dequeue();
-                var objectTransform = dataManager.Objects[transformMsg.ObjectID];
-                objectTransform.Position = transformMsg.Pos;
-                objectTransform.Rotation = transformMsg.Rot;
-                objectTransform.Scale = transformMsg.Scale;
-                objectTransform.OwnerID = transformMsg.OwnerID;
+                if (dataManager.Objects.ContainsKey(transformMsg.ObjectID))
+                {
+                    var objectTransform = dataManager.Objects[transformMsg.ObjectID];
+                    objectTransform.Position = transformMsg.Pos;
+                    objectTransform.Rotation = transformMsg.Rot;
+                    objectTransform.Scale = transformMsg.Scale;
+                    objectTransform.OwnerID = transformMsg.OwnerID;
+                }
 
                 OutgoingMessages.Enqueue(transformMsg);
             }
@@ -87,8 +91,7 @@ namespace Assets.Scripts.SERVER.Processors
                 ObjectTransform.Scale = objectToSync.Scale;
                 ObjectTransform.OwnerID = objectToSync.OwnerID;
                 ObjectTransform.ObjectID = objectToSync.ID;
-                ObjectTransform.ObjectType = objectToSync.ObjectType;   
-
+                ObjectTransform.ObjectType = objectToSync.ObjectType;
 
                 var bytes = Serializer.SerializeObjectTransform(ObjectTransform);
 

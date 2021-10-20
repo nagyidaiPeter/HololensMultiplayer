@@ -12,14 +12,14 @@ namespace hololensMultiplayer
     public class ObjectData
     {
         public int ID;
-        public int OwnerID;
+        public int OwnerID = -1;
         public string Name = "SyncedObject";
 
         public string ObjectType = "PrefabName";
 
-        public Vector3 Position = new Vector3();
-        public Quaternion Rotation = new Quaternion();
-        public Vector3 Scale = new Vector3();
+        public Vector3 Position = Vector3.zero;
+        public Quaternion Rotation = Quaternion.identity;
+        public Vector3 Scale = Vector3.one;
 
         public GameObject gameObject;
 

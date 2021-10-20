@@ -40,6 +40,9 @@ public class ServerHandler : MonoBehaviour
         server.StartServer();
         RunningServer = true;
         dataManager.IsServer = true;
+
+        GetComponent<ObjectSpawner>().SpawnObject("CoffeeCup");
+
     }
 
     public void StopServer()

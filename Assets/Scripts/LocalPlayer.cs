@@ -46,9 +46,9 @@ public class LocalPlayer : MonoBehaviour
             playerTransform.SenderID = dataManager.LocalPlayer.ID;
 
             Vector3 qrRelativePos = transform.position - qrPos.position;
-            playerTransform.Pos = qrRelativePos;
+            playerTransform.Pos = transform.localPosition;
             playerTransform.Rot = transform.localRotation;
-            
+
             if (RH != null)
             {
                 playerTransform.RHPos = RH.position - transform.position;

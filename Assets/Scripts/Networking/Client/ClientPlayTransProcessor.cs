@@ -97,7 +97,7 @@ namespace Assets.Scripts.SERVER.Processors
                         PlayerData newPlayer = new PlayerData();
                         newPlayer.ID = transformMsg.SenderID;
 
-                        var networkPlayer = playerFactory.Create("PlayerHead");
+                        var networkPlayer = playerFactory.Create("Players/PlayerHead");
                         var newPlayerGO = networkPlayer.gameObject;
                         newPlayerGO.SetActive(true);
                         newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
@@ -109,7 +109,7 @@ namespace Assets.Scripts.SERVER.Processors
                     {
                         PlayerData newPlayer = dataManager.Players[transformMsg.SenderID];
 
-                        var networkPlayer = playerFactory.Create("PlayerHead");
+                        var networkPlayer = playerFactory.Create("Players/PlayerHead");
                         var newPlayerGO = networkPlayer.gameObject;
                         newPlayerGO.SetActive(true);
                         newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;

@@ -39,6 +39,7 @@ namespace Assets.Scripts.SERVER.Processors
 
             objectTransform.ObjectID = objectFB.ObjectID;
             objectTransform.OwnerID = objectFB.OwnerID;
+            objectTransform.ObjectType = objectFB.ObjectType;
 
             if (objectFB.Pos.HasValue)
                 objectTransform.Pos = new Vector3(objectFB.Pos.Value.X, objectFB.Pos.Value.Y, objectFB.Pos.Value.Z);
@@ -73,6 +74,7 @@ namespace Assets.Scripts.SERVER.Processors
                 if (dataManager.Objects.ContainsKey(objectTransformMsg.ObjectID))
                 {
                     var objectTransform = dataManager.Objects[objectTransformMsg.ObjectID];
+                    objectTransform.ID = objectTransformMsg.ObjectID;
                     objectTransform.OwnerID = objectTransformMsg.OwnerID;
                     objectTransform.Position = objectTransformMsg.Pos;
                     objectTransform.Rotation = objectTransformMsg.Rot;
@@ -81,13 +83,12 @@ namespace Assets.Scripts.SERVER.Processors
                 else
                 {
                     ObjectData newObject = new ObjectData();
-                    
-                    var networkPlayer = objectFactory.Create(Resources.Load($"Objects/{objectTransformMsg.ObjectType}"));
-                    var newPlayerGO = networkPlayer.gameObject;
+                    var networkObject = objectFactory.Create(Resources.Load($"Objects/{objectTransformMsg.ObjectType}"));
+                    var newPlayerGO = networkObject.gameObject;
                     newPlayerGO.SetActive(true);
                     newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
                     newObject.gameObject = newPlayerGO;
-                    networkPlayer.objectData = newObject;
+                    networkObject.objectData = newObject;
                     dataManager.Objects.Add(objectTransformMsg.ObjectID, newObject);
                 }
             }
@@ -98,11 +99,9 @@ namespace Assets.Scripts.SERVER.Processors
             while (OutgoingMessages.Any())
             {
                 var posMsg = OutgoingMessages.Dequeue();
-
                 var msg = netClient.CreateMessage();
 
                 posMsg.SenderID = dataManager.LocalPlayer.ID;
-                posMsg.OwnerID = dataManager.LocalPlayer.ID;
 
                 var bytes = Serializer.SerializeObjectTransform(posMsg);
 
