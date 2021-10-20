@@ -286,8 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f728fa2fb8a8045aef08790e188f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 0
-  InterVel: 40
+  InterVel: 35
   HandInterVel: 35
   RH: {fileID: 7901440451260767626}
   LH: {fileID: 5017843195710329464}

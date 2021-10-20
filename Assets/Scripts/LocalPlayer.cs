@@ -58,7 +58,7 @@ public class LocalPlayer : MonoBehaviour
             else
             {
                 //todo: Find something less retarded, this was used since handconstraint returned offseted transform...
-                RH = transform.parent.Find("Right_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
+                RH = transform.parent.Find("Right_RiggedHandRight(Clone)")?.Find("Palm Proxy Transform");
             }
 
             if (LH != null)
@@ -68,7 +68,7 @@ public class LocalPlayer : MonoBehaviour
             }
             else
             {
-                LH = transform.parent.Find("Left_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
+                LH = transform.parent.Find("Left_RiggedHandLeft(Clone)")?.Find("Palm Proxy Transform");
             }
 
             client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(playerTransform);
