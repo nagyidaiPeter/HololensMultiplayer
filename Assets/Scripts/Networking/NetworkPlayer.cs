@@ -34,14 +34,14 @@ public class NetworkPlayer : MonoBehaviour
 
             if (RH != null)
             {
-                RH.position = transform.position + playerData.RHPosition;
-                RH.localRotation = playerData.RHRotation;
+                //RH.position = transform.position + playerData.RHPosition;
+                //RH.localRotation = playerData.RHRotation;
             }
 
             if (LH != null)
             {
-                LH.position = transform.position + playerData.LHPosition;
-                LH.localRotation = playerData.LHRotation;
+                //LH.position = transform.position + playerData.LHPosition;
+                //LH.localRotation = playerData.LHRotation;
             }
         }
         else
@@ -51,14 +51,14 @@ public class NetworkPlayer : MonoBehaviour
 
             if (RH != null)
             {
-                RH.position = Vector3.Lerp(RH.position, transform.position + playerData.RHPosition, HandInterVel * Time.deltaTime);
-                RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.RHRotation, HandInterVel * Time.deltaTime);
+                //RH.position = Vector3.Lerp(RH.position, transform.position + playerData.RHPosition, HandInterVel * Time.deltaTime);
+                //RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.RHRotation, HandInterVel * Time.deltaTime);
             }
 
             if (LH != null)
             {
-                LH.position = Vector3.Lerp(LH.position, transform.position + playerData.LHPosition, HandInterVel * Time.deltaTime);
-                LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.LHRotation, HandInterVel * Time.deltaTime);
+                //LH.position = Vector3.Lerp(LH.position, transform.position + playerData.LHPosition, HandInterVel * Time.deltaTime);
+                //LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.LHRotation, HandInterVel * Time.deltaTime);
             }
         }
     }
