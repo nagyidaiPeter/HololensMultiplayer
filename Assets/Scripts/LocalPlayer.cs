@@ -54,20 +54,11 @@ public class LocalPlayer : MonoBehaviour
                 playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
                 playerTransform.RHRot = RH.localRotation;
             }
-            else
-            {
-                //todo: Find something less retarded, this was used since handconstraint returned offseted transform...
-                RH = transform.parent.Find("Right_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
-            }
 
             if (LH != null)
             {
                 playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
                 playerTransform.LHRot = LH.localRotation;
-            }
-            else
-            {
-                LH = transform.parent.Find("Left_HandSkeleton(Clone)")?.Find("Palm Proxy Transform");
             }
 
             client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(playerTransform);

@@ -129,7 +129,7 @@ namespace Assets.Scripts.SERVER.Processors
 
                 if (dataManager.LocalPlayer.ID == transformMsg.SenderID)
                 {
-                    dataManager.Players[transformMsg.SenderID].playerObject.SetActive(false);
+                    dataManager.Players[transformMsg.SenderID].playerObject.GetComponent<MeshRenderer>().enabled = false;
                 }
             }
         }
