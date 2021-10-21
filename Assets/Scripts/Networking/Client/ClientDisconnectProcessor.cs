@@ -31,7 +31,8 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var dcMsg = IncomingMessages.Dequeue();
-                var player = dataManager.GetPlayerById(dcMsg.SenderID);
+                Debug.Log($"Player {dcMsg.DisconnectedUserID} disconnected..");
+                var player = dataManager.GetPlayerById(dcMsg.DisconnectedUserID);
 
                 dataManager.Players.Remove(player.ID);
                 GameObject.Destroy(player.playerObject);
@@ -61,6 +62,7 @@ namespace Assets.Scripts.SERVER.Processors
             DisconnectMessage dcMsg = new DisconnectMessage();
 
             dcMsg.SenderID = disconnectFB.PlayerID;
+            dcMsg.DisconnectedUserID = disconnectFB.PlayerID;
 
             IncomingMessages.Enqueue(dcMsg);
             return true;

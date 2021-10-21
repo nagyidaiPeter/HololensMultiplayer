@@ -29,7 +29,7 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var dcMsg = IncomingMessages.Dequeue();
-                var player = dataManager.GetPlayerById(dcMsg.SenderID);
+                var player = dataManager.GetPlayerById(dcMsg.DisconnectedUserID);
 
                 dataManager.Players.Remove(player.ID);
                 Transform.Destroy(player.playerObject);

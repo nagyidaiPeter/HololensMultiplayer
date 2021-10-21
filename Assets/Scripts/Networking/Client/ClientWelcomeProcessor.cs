@@ -54,7 +54,9 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var welcomeMsg = IncomingMessages.Dequeue();
-                Debug.Log("Welcome received!");
+
+                dataManager.LocalPlayer.ID = welcomeMsg.SenderID;
+
                 OutgoingMessages.Enqueue(welcomeMsg);
             }
         }

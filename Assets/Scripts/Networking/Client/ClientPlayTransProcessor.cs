@@ -81,6 +81,10 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var transformMsg = IncomingMessages.Dequeue();
+
+                if (transformMsg.SenderID == 0)
+                    continue;
+
                 if (dataManager.Players.ContainsKey(transformMsg.SenderID) && dataManager.Players[transformMsg.SenderID].playerObject != null)
                 {
                     var player = dataManager.Players[transformMsg.SenderID];
@@ -121,7 +125,11 @@ namespace Assets.Scripts.SERVER.Processors
                         networkPlayer.playerData = newPlayer;
                         dataManager.Players[newPlayer.ID] = newPlayer;
                     }
-                 
+                }
+
+                if (dataManager.LocalPlayer.ID == transformMsg.SenderID)
+                {
+                    dataManager.Players[transformMsg.SenderID].playerObject.SetActive(false);
                 }
             }
         }
@@ -142,7 +150,7 @@ namespace Assets.Scripts.SERVER.Processors
                 msg.Write(bytes.Length);
                 msg.Write(bytes);
 
-                netClient.SendMessage(msg, NetDeliveryMethod.UnreliableSequenced, 0);
+                netClient.SendMessage(msg, NetDeliveryMethod.Unreliable, 0);
             }
         }
 

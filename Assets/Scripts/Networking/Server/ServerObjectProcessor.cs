@@ -39,7 +39,7 @@ namespace Assets.Scripts.SERVER.Processors
             ObjectTransformMsg objectTransform = new ObjectTransformMsg();
 
             objectTransform.SenderID = player.ID;
-            objectTransform.OwnerID = transformFB.OwnerID;
+            objectTransform.OwnerID = player.ID;            
             objectTransform.ObjectID = transformFB.ObjectID;
 
             if (transformFB.Pos.HasValue)
@@ -68,8 +68,6 @@ namespace Assets.Scripts.SERVER.Processors
                     objectTransform.Scale = transformMsg.Scale;
                     objectTransform.OwnerID = transformMsg.OwnerID;
                 }
-
-                OutgoingMessages.Enqueue(transformMsg);
             }
         }
 
@@ -99,7 +97,7 @@ namespace Assets.Scripts.SERVER.Processors
                 msg.Write(bytes.Length);
                 msg.Write(bytes);
 
-                netServer.SendToAll(msg, NetDeliveryMethod.UnreliableSequenced, 0);
+                netServer.SendToAll(msg, NetDeliveryMethod.Unreliable, 0);
             }
         }
 

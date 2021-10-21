@@ -71,11 +71,12 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var objectTransformMsg = IncomingMessages.Dequeue();
+
+                if (dataManager.IsServer)
+                    continue;
+
                 if (dataManager.Objects.ContainsKey(objectTransformMsg.ObjectID))
                 {
-                    if (objectTransformMsg.OwnerID == -1 && dataManager.IsServer)
-                        return;
-
                     var objectTransform = dataManager.Objects[objectTransformMsg.ObjectID];
                     objectTransform.ID = objectTransformMsg.ObjectID;
                     objectTransform.OwnerID = objectTransformMsg.OwnerID;
@@ -102,6 +103,7 @@ namespace Assets.Scripts.SERVER.Processors
             while (OutgoingMessages.Any())
             {
                 var posMsg = OutgoingMessages.Dequeue();
+
                 var msg = netClient.CreateMessage();
 
                 posMsg.SenderID = dataManager.LocalPlayer.ID;
@@ -112,7 +114,7 @@ namespace Assets.Scripts.SERVER.Processors
                 msg.Write(bytes.Length);
                 msg.Write(bytes);
 
-                netClient.SendMessage(msg, NetDeliveryMethod.UnreliableSequenced, 0);
+                netClient.SendMessage(msg, NetDeliveryMethod.Unreliable, 0);
             }
         }
 

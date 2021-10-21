@@ -116,7 +116,7 @@ namespace Assets.Scripts.SERVER.Processors
                 msg.Write(bytes.Length);
                 msg.Write(bytes);
 
-                netServer.SendToAll(msg, NetDeliveryMethod.UnreliableSequenced, 0);
+                netServer.SendToAll(msg, NetDeliveryMethod.Unreliable, 0);
             }
         }
 

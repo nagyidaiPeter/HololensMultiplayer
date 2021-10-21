@@ -41,11 +41,6 @@ namespace hololensMultiplayer
             return Players[ID];
         }
 
-        public PlayerData GetPlayerByGuid(string guid)
-        {
-            return Players.FirstOrDefault(x => x.Value.ConnectionGUID == guid).Value;
-        }
-
         public DataManager()
         {
 

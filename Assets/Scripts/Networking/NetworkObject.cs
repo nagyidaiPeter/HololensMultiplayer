@@ -23,7 +23,7 @@ public class NetworkObject : MonoBehaviour
     public float InterVel = 35;
     public ObjectData objectData = null;
     public Transform qrPos;
-
+    public int RefreshRate = 30;
     [Inject]
     private DataManager dataManager;
 
@@ -33,30 +33,17 @@ public class NetworkObject : MonoBehaviour
     void Start()
     {
         qrPos = transform.parent.Find("QR");
+        StartCoroutine(SendData());
     }
 
     void Update()
     {
-        if (OwnerID != dataManager.LocalPlayer.ID)
-        {
-            transform.localPosition = objectData.Position;
-            transform.localRotation = objectData.Rotation;
-            transform.localScale = objectData.Scale;
-        }
-        else
-        {
-            ObjectTransformMsg transformMsg = new ObjectTransformMsg();
-            transformMsg.ObjectID = objectData.ID;
-            transformMsg.OwnerID = OwnerID;
-            transformMsg.SenderID = OwnerID;
 
-            transformMsg.ObjectType = objectData.ObjectType;
-            transformMsg.Pos = transform.localPosition;
-            transformMsg.Rot = transform.localRotation;
-            transformMsg.Scale = transform.localScale;
+    }
 
-            objectProcessor.AddOutMessage(transformMsg);
-        }
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 
     public void ClaimObject()
@@ -73,6 +60,34 @@ public class NetworkObject : MonoBehaviour
         transformMsg.Scale = transform.localScale;
 
         objectProcessor.AddOutMessage(transformMsg);
+    }
+
+    private IEnumerator SendData()
+    {
+        while (true)
+        {
+            if (OwnerID != dataManager.LocalPlayer.ID)
+            {
+                transform.localPosition = objectData.Position;
+                transform.localRotation = objectData.Rotation;
+                transform.localScale = objectData.Scale;
+            }
+            else
+            {
+                ObjectTransformMsg transformMsg = new ObjectTransformMsg();
+                transformMsg.ObjectID = objectData.ID;
+                transformMsg.OwnerID = OwnerID;
+                transformMsg.SenderID = OwnerID;
+
+                transformMsg.ObjectType = objectData.ObjectType;
+                transformMsg.Pos = transform.localPosition;
+                transformMsg.Rot = transform.localRotation;
+                transformMsg.Scale = transform.localScale;
+
+                objectProcessor.AddOutMessage(transformMsg);
+            }
+            yield return new WaitForSeconds(1 / RefreshRate);
+        }
     }
 
     public void DisclaimObject()

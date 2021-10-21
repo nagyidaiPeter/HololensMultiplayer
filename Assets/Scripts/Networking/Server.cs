@@ -97,8 +97,6 @@ namespace hololensMultiplayer
                             case NetConnectionStatus.Connected:
                                 ConnectedPlayers++;
                                 var newPlayer = new PlayerData();
-                                newPlayer.ConnectionGUID += Guid.NewGuid().ToString();
-                                newPlayer.Name = newPlayer.ConnectionGUID;
                                 newPlayer.connection = message.SenderConnection;
                                 newPlayer.ID = ConnectedPlayers;
 
@@ -124,7 +122,7 @@ namespace hololensMultiplayer
                                 {
                                     DisconnectMessage disconnectMessage = new DisconnectMessage();
                                     disconnectMessage.DisconnectedUserID = player.ID;
-
+                                    Debug.Log($"Dc happened: {player.ID} from players: {dataManager.Players.Count()}");
                                     MessageProcessors[MessageTypes.Disconnect].AddOutMessage(disconnectMessage);
                                 }
                                 break;

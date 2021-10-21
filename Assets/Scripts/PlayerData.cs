@@ -13,8 +13,6 @@ namespace hololensMultiplayer
     {
         public int ID;
         public NetConnection connection;
-        public string ConnectionGUID;
-
         public string Name = "Player";
 
         public Vector3 Position = new Vector3();

@@ -14,6 +14,7 @@ public class Serializer
         TransformFB.StartTransformFB(builder);
 
         TransformFB.AddPlayerID(builder, player.SenderID);
+        
         TransformFB.AddPos(builder, Vec3.CreateVec3(builder, player.Pos.x, player.Pos.y, player.Pos.z));
         TransformFB.AddRot(builder, Quat.CreateQuat(builder, player.Rot.x, player.Rot.y, player.Rot.z, player.Rot.w));
         TransformFB.AddQrOffset(builder, Vec3.CreateVec3(builder, player.QrOffset.x, player.QrOffset.y, player.QrOffset.z));
@@ -72,7 +73,7 @@ public class Serializer
         
         DisconnectFB.StartDisconnectFB(builder);
 
-        DisconnectFB.AddPlayerID(builder, disconnect.SenderID);
+        DisconnectFB.AddPlayerID(builder, disconnect.DisconnectedUserID);
         
         var offset = DisconnectFB.EndDisconnectFB(builder);
         DisconnectFB.FinishDisconnectFBBuffer(builder, offset);
