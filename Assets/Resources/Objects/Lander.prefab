@@ -269,7 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handType: 3
   proximityType: 3
-  constraintOnRotation: 5
+  constraintOnRotation: 0
   useLocalSpaceForConstraint: 0
 --- !u!114 &3248806805094897949
 MonoBehaviour:

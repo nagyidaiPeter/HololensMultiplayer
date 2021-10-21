@@ -432,7 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handType: 3
   proximityType: 3
-  constraintOnRotation: 5
+  constraintOnRotation: 0
   useLocalSpaceForConstraint: 0
 --- !u!114 &7639695947506035354
 MonoBehaviour:
@@ -594,3 +594,4 @@ MonoBehaviour:
   OwnerID: -1
   InterVel: 35
   qrPos: {fileID: 0}
+  RefreshRate: 30
