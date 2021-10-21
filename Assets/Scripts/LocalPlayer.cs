@@ -51,7 +51,7 @@ public class LocalPlayer : MonoBehaviour
 
             if (RH != null)
             {
-                playerTransform.RHPos = RH.position - transform.position;
+                playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
                 playerTransform.RHRot = RH.localRotation;
             }
             else
@@ -62,7 +62,7 @@ public class LocalPlayer : MonoBehaviour
 
             if (LH != null)
             {
-                playerTransform.LHPos = LH.position - transform.position;
+                playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
                 playerTransform.LHRot = LH.localRotation;
             }
             else
