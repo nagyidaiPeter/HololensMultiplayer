@@ -7,10 +7,12 @@ table TransformFB {
   Pos:Vec3;
   QrOffset:Vec3;
   Rot:Quat;
-
+  
+  RHActive:bool;
   RHPos:Vec3;
   RHRot:Quat;
 
+  LHActive:bool;
   LHPos:Vec3;
   LHRot:Quat;
 }

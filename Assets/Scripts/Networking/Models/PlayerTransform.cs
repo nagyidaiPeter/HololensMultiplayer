@@ -13,10 +13,12 @@ namespace hololensMultiplayer.Models
         public Vector3 Pos { get; set; }
         public Quaternion Rot { get; set; }
         public Vector3 QrOffset { get; set; }
+
+        public bool RHActive { get; set; }
         public Vector3 RHPos { get; set; }
         public Quaternion RHRot { get; set; }
 
-
+        public bool LHActive { get; set; }
         public Vector3 LHPos { get; set; }
         public Quaternion LHRot { get; set; }
 

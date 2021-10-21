@@ -37,14 +37,14 @@ public class NetworkPlayer : MonoBehaviour
             {
                 RH.localPosition = playerData.RHPosition;
                 RH.localRotation = playerData.RHRotation;
-                RH.gameObject.SetActive(RH.localPosition != Vector3.zero);
+                RH.gameObject.SetActive(playerData.RHActive);
             }
 
             if (LH != null)
             {
                 LH.localPosition = playerData.LHPosition;
                 LH.localRotation = playerData.LHRotation;
-                LH.gameObject.SetActive(LH.localPosition != Vector3.zero);
+                LH.gameObject.SetActive(playerData.LHActive);
             }
         }
         else
@@ -57,14 +57,14 @@ public class NetworkPlayer : MonoBehaviour
             {
                 RH.localPosition = Vector3.Lerp(RH.localPosition, playerData.RHPosition, HandInterVel * Time.deltaTime);
                 RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.RHRotation, HandInterVel * Time.deltaTime);
-                RH.gameObject.SetActive(RH.localPosition != Vector3.zero);
+                RH.gameObject.SetActive(playerData.RHActive);
             }
 
             if (LH != null)
             {
                 LH.localPosition = Vector3.Lerp(LH.localPosition, playerData.LHPosition, HandInterVel * Time.deltaTime);
                 LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.LHRotation, HandInterVel * Time.deltaTime);
-                LH.gameObject.SetActive(LH.localPosition != Vector3.zero);
+                LH.gameObject.SetActive(playerData.LHActive);
             }
         }
     }

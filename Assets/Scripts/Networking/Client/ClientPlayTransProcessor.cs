@@ -39,6 +39,8 @@ namespace Assets.Scripts.SERVER.Processors
             PlayerTransform playerTransform = new PlayerTransform();
 
             playerTransform.SenderID = transformFB.PlayerID;
+            playerTransform.RHActive = transformFB.RHActive;
+            playerTransform.LHActive = transformFB.LHActive;
 
             if (transformFB.Pos.HasValue)
                 playerTransform.Pos = new Vector3(transformFB.Pos.Value.X, transformFB.Pos.Value.Y, transformFB.Pos.Value.Z);
@@ -92,9 +94,11 @@ namespace Assets.Scripts.SERVER.Processors
                     player.Rotation = transformMsg.Rot;
                     player.QrOffset = transformMsg.QrOffset;
 
+                    player.RHActive = transformMsg.RHActive;
                     player.RHPosition = transformMsg.RHPos;
                     player.RHRotation = transformMsg.RHRot;
 
+                    player.LHActive = transformMsg.LHActive;
                     player.LHPosition = transformMsg.LHPos;
                     player.LHRotation = transformMsg.LHRot;
                 }

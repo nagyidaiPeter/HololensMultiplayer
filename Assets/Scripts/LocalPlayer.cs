@@ -53,12 +53,14 @@ public class LocalPlayer : MonoBehaviour
             {
                 playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
                 playerTransform.RHRot = RH.localRotation;
+                playerTransform.RHActive = RH.GetComponent<HandTracker>().IsTracked;
             }
 
             if (LH != null)
             {
                 playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
                 playerTransform.LHRot = LH.localRotation;
+                playerTransform.LHActive = LH.GetComponent<HandTracker>().IsTracked;
             }
 
             client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(playerTransform);

@@ -3,6 +3,7 @@ using Microsoft.MixedReality.Toolkit.Utilities;
 
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class HandTracker : MonoBehaviour
@@ -18,7 +19,7 @@ public class HandTracker : MonoBehaviour
         if (IsTracked)
         {
             transform.position = pose.Position;
-            transform.rotation = pose.Rotation;            
+            transform.rotation = pose.Rotation;
         }
 
         foreach (Transform child in transform)

@@ -39,6 +39,8 @@ namespace Assets.Scripts.SERVER.Processors
             PlayerTransform playerTransform = new PlayerTransform();
 
             playerTransform.SenderID = player.ID;
+            playerTransform.RHActive = transformFB.RHActive;
+            playerTransform.LHActive = transformFB.LHActive;
 
             if (transformFB.Pos.HasValue)
                 playerTransform.Pos = new Vector3(transformFB.Pos.Value.X, transformFB.Pos.Value.Y, transformFB.Pos.Value.Z);
@@ -75,13 +77,14 @@ namespace Assets.Scripts.SERVER.Processors
                 player.Rotation = transformMsg.Rot;
                 player.QrOffset = transformMsg.QrOffset;
 
+                player.RHActive = transformMsg.RHActive;
+                player.LHActive = transformMsg.LHActive;
+
                 player.RHPosition = transformMsg.RHPos;
                 player.RHRotation = transformMsg.RHRot;
 
                 player.LHPosition = transformMsg.LHPos;
                 player.LHRotation = transformMsg.LHRot;
-
-                OutgoingMessages.Enqueue(transformMsg);
             }
         }
 
@@ -101,6 +104,9 @@ namespace Assets.Scripts.SERVER.Processors
                 playerTransform.Pos = otherPlayer.Position;
                 playerTransform.Rot = otherPlayer.Rotation;
                 playerTransform.QrOffset = otherPlayer.QrOffset;
+
+                playerTransform.RHActive = otherPlayer.RHActive;
+                playerTransform.LHActive = otherPlayer.LHActive;
 
                 playerTransform.RHPos = otherPlayer.RHPosition;
                 playerTransform.RHRot = otherPlayer.RHRotation;

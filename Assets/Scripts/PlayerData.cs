@@ -19,9 +19,11 @@ namespace hololensMultiplayer
         public Quaternion Rotation = new Quaternion();
         public Vector3 QrOffset = new Vector3();
 
+        public bool RHActive = false;
         public Vector3 RHPosition = new Vector3();
         public Quaternion RHRotation = new Quaternion();
 
+        public bool LHActive = false;
         public Vector3 LHPosition = new Vector3();
         public Quaternion LHRotation = new Quaternion();
 
