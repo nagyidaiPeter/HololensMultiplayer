@@ -43,15 +43,19 @@ public class ServerHandler : MonoBehaviour
 
         GetComponent<ObjectSpawner>().SpawnObject("CoffeeCup");
         GetComponent<ObjectSpawner>().SpawnObject("Cheese");
-
     }
 
+    private void OnDestroy()
+    {
+        StopServer();
+    }
     public void StopServer()
     {
         Debug.Log("Stopping server..");
         RunningServer = false;
-        dataManager.IsServer = false;
+        dataManager.IsServer = false;        
         StopAllCoroutines();
+        server.StoptServer();
     }
 
     private IEnumerator ServerUpdate()

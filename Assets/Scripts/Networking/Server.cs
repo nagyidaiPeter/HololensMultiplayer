@@ -39,6 +39,11 @@ namespace hololensMultiplayer
             MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
         }
 
+        internal void StoptServer()
+        {
+            server.Shutdown("bye");
+        }
+
         public void StartServer()
         {
             server.Start();
