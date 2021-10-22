@@ -20,10 +20,12 @@ public class Serializer
         TransformFB.AddQrOffset(builder, Vec3.CreateVec3(builder, player.QrOffset.x, player.QrOffset.y, player.QrOffset.z));
 
         TransformFB.AddRHActive(builder, player.RHActive);
+        TransformFB.AddRHState(builder, HandState.CreateHandState(builder, player.RHFingers.Pinky, player.RHFingers.Ring, player.RHFingers.Middle, player.RHFingers.Index, player.RHFingers.Thumb));
         TransformFB.AddRHPos(builder, Vec3.CreateVec3(builder, player.RHPos.x, player.RHPos.y, player.RHPos.z));
         TransformFB.AddRHRot(builder, Quat.CreateQuat(builder, player.RHRot.x, player.RHRot.y, player.RHRot.z, player.RHRot.w));
 
         TransformFB.AddLHActive(builder, player.LHActive);
+        TransformFB.AddLHState(builder, HandState.CreateHandState(builder, player.LHFingers.Pinky, player.LHFingers.Ring, player.LHFingers.Middle, player.LHFingers.Index, player.LHFingers.Thumb));
         TransformFB.AddLHPos(builder, Vec3.CreateVec3(builder, player.LHPos.x, player.LHPos.y, player.LHPos.z));
         TransformFB.AddLHRot(builder, Quat.CreateQuat(builder, player.LHRot.x, player.LHRot.y, player.LHRot.z, player.LHRot.w));
 

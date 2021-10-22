@@ -51,6 +51,7 @@ public class LocalPlayer : MonoBehaviour
 
             if (RH != null)
             {
+                playerTransform.RHFingers = RH.GetComponent<HandTracker>().handState;
                 playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
                 playerTransform.RHRot = RH.localRotation;
                 playerTransform.RHActive = RH.GetComponent<HandTracker>().IsTracked;
@@ -58,6 +59,7 @@ public class LocalPlayer : MonoBehaviour
 
             if (LH != null)
             {
+                playerTransform.LHFingers = LH.GetComponent<HandTracker>().handState;
                 playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
                 playerTransform.LHRot = LH.localRotation;
                 playerTransform.LHActive = LH.GetComponent<HandTracker>().IsTracked;

@@ -9,10 +9,12 @@ table TransformFB {
   Rot:Quat;
   
   RHActive:bool;
+  RHState:HandState;
   RHPos:Vec3;
   RHRot:Quat;
 
   LHActive:bool;
+  LHState:HandState;
   LHPos:Vec3;
   LHRot:Quat;
 }

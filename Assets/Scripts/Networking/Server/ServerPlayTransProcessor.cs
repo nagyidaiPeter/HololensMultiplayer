@@ -51,11 +51,17 @@ namespace Assets.Scripts.SERVER.Processors
             if (transformFB.QrOffset.HasValue)
                 playerTransform.QrOffset = new Vector3(transformFB.QrOffset.Value.X, transformFB.QrOffset.Value.Y, transformFB.QrOffset.Value.Z);
 
+            if (transformFB.RHState.HasValue)
+                playerTransform.RHFingers = new FingersState(transformFB.RHState.Value.Pinky, transformFB.RHState.Value.Ring, transformFB.RHState.Value.Middle, transformFB.RHState.Value.Index, transformFB.RHState.Value.Thumb);
+
             if (transformFB.RHPos.HasValue)
                 playerTransform.RHPos = new Vector3(transformFB.RHPos.Value.X, transformFB.RHPos.Value.Y, transformFB.RHPos.Value.Z);
 
             if (transformFB.RHRot.HasValue)
                 playerTransform.RHRot = new Quaternion(transformFB.RHRot.Value.X, transformFB.RHRot.Value.Y, transformFB.RHRot.Value.Z, transformFB.RHRot.Value.W);
+
+            if (transformFB.LHState.HasValue)
+                playerTransform.LHFingers = new FingersState(transformFB.LHState.Value.Pinky, transformFB.LHState.Value.Ring, transformFB.LHState.Value.Middle, transformFB.LHState.Value.Index, transformFB.LHState.Value.Thumb);
 
             if (transformFB.LHPos.HasValue)
                 playerTransform.LHPos = new Vector3(transformFB.LHPos.Value.X, transformFB.LHPos.Value.Y, transformFB.LHPos.Value.Z);
@@ -80,9 +86,11 @@ namespace Assets.Scripts.SERVER.Processors
                 player.RHActive = transformMsg.RHActive;
                 player.LHActive = transformMsg.LHActive;
 
+                player.RHFingers = transformMsg.RHFingers;
                 player.RHPosition = transformMsg.RHPos;
                 player.RHRotation = transformMsg.RHRot;
 
+                player.LHFingers = transformMsg.LHFingers;
                 player.LHPosition = transformMsg.LHPos;
                 player.LHRotation = transformMsg.LHRot;
             }
@@ -108,9 +116,11 @@ namespace Assets.Scripts.SERVER.Processors
                 playerTransform.RHActive = otherPlayer.RHActive;
                 playerTransform.LHActive = otherPlayer.LHActive;
 
+                playerTransform.RHFingers = otherPlayer.RHFingers;
                 playerTransform.RHPos = otherPlayer.RHPosition;
                 playerTransform.RHRot = otherPlayer.RHRotation;
 
+                playerTransform.LHFingers = otherPlayer.LHFingers;
                 playerTransform.LHPos = otherPlayer.LHPosition;
                 playerTransform.LHRot = otherPlayer.LHRotation;
 

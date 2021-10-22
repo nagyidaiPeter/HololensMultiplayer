@@ -13,3 +13,10 @@ struct Quat {
   w:float;
 }
 
+struct HandState {
+  Pinky:float;
+  Ring:float;
+  Middle:float;
+  Index:float;
+  Thumb:float;
+}

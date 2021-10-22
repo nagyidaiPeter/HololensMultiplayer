@@ -41,12 +41,12 @@ public class ServerHandler : MonoBehaviour
         RunningServer = true;
         dataManager.IsServer = true;
 
-        //foreach (var obj in Resources.LoadAll("Objects"))
-        //{
-        //    GetComponent<ObjectSpawner>().SpawnObject(obj.name);
-        //}
+        foreach (var obj in Resources.LoadAll("Objects"))
+        {
+            GetComponent<ObjectSpawner>().SpawnObject(obj.name);
+        }
 
-        GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
+        //GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
     }
 
     private void OnDestroy()

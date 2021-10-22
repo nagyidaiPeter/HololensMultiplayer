@@ -50,5 +50,29 @@ public struct Quat : IFlatbufferObject
   }
 };
 
+public struct HandState : IFlatbufferObject
+{
+  private Struct __p;
+  public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Struct(_i, _bb); }
+  public HandState __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+
+  public float Pinky { get { return __p.bb.GetFloat(__p.bb_pos + 0); } }
+  public float Ring { get { return __p.bb.GetFloat(__p.bb_pos + 4); } }
+  public float Middle { get { return __p.bb.GetFloat(__p.bb_pos + 8); } }
+  public float Index { get { return __p.bb.GetFloat(__p.bb_pos + 12); } }
+  public float Thumb { get { return __p.bb.GetFloat(__p.bb_pos + 16); } }
+
+  public static Offset<hololensMulti.HandState> CreateHandState(FlatBufferBuilder builder, float Pinky, float Ring, float Middle, float Index, float Thumb) {
+    builder.Prep(4, 20);
+    builder.PutFloat(Thumb);
+    builder.PutFloat(Index);
+    builder.PutFloat(Middle);
+    builder.PutFloat(Ring);
+    builder.PutFloat(Pinky);
+    return new Offset<hololensMulti.HandState>(builder.Offset);
+  }
+};
+
 
 }
