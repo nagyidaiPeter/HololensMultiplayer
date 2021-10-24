@@ -1,9 +1,4 @@
-﻿using hololensMultiplayer;
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Zenject;
+﻿using UnityEngine;
 
 public class PlayerDataScript : MonoBehaviour
 {

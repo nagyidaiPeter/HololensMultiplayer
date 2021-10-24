@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using UnityEditor;
 using System.IO;
 using UnityFbs.EditorScripts.Constants;
 using UnityFbs.EditorScripts.Settings;
 
-namespace UnityFbs.EditorScripts {
+namespace UnityFbs.EditorScripts
+{
     class ExeRunner {
         private string flatcPath;
 

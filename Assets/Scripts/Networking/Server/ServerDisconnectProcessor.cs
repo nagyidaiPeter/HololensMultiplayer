@@ -1,15 +1,13 @@
-﻿using Lidgren.Network;
-using Newtonsoft.Json;
+﻿
 using hololensMultiplayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
+using LiteNetLib;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -19,17 +17,14 @@ namespace Assets.Scripts.SERVER.Processors
         public new Queue<DisconnectMessage> OutgoingMessages { get; set; } = new Queue<DisconnectMessage>();
 
         [Inject]
-        private NetServer netServer;
-
-        [Inject]
-        private DataManager dataManager;
+        private Server server;
 
         public override void ProcessIncoming()
         {
             while (IncomingMessages.Any())
             {
                 var dcMsg = IncomingMessages.Dequeue();
-                var player = dataManager.GetPlayerById(dcMsg.DisconnectedUserID);
+                var player = dataManager.Players[dcMsg.DisconnectedUserID];
 
                 dataManager.Players.Remove(player.ID);
                 Transform.Destroy(player.playerObject);
@@ -41,21 +36,16 @@ namespace Assets.Scripts.SERVER.Processors
         {
             while (OutgoingMessages.Any())
             {
-                var msg = netServer.CreateMessage();
                 var dcMsg = OutgoingMessages.Dequeue();
-                var serializedMsg = Serializer.SerializeDisconnect(dcMsg);
-
-                msg.Write((byte)MessageTypes.Disconnect);
-                msg.Write(serializedMsg.Length);
-                msg.Write(serializedMsg);
-
-                netServer.SendToAll(msg, NetDeliveryMethod.ReliableOrdered, 0);
+                server.SendToAll(dcMsg.Serialize());
             }
         }
 
-        public override bool AddInMessage(byte[] message, PlayerData player)
+        public override bool AddInMessage(byte[] message, NetPeer player)
         {
-            throw new NotImplementedException();
+            DisconnectMessage disconnectMessage = new DisconnectMessage(message);
+            IncomingMessages.Enqueue(disconnectMessage);
+            return true;
         }
 
         public override bool AddOutMessage(BaseMessageType objectToSend)

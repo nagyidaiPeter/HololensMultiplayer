@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System;
 using System.IO;
 using UnityFbs.EditorScripts.Constants;
 using UnityFbs.EditorScripts.Settings;
 
-namespace UnityFbs.EditorScripts {
+namespace UnityFbs.EditorScripts
+{
     public class GenerateFbsDefinition : Editor {
         private const string FAIL_DIALOG_TITLE = "Convert FlatBuffers message failed";
 

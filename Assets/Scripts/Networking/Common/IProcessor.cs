@@ -1,12 +1,6 @@
-﻿using Lidgren.Network;
-using hololensMultiplayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 using hololensMultiplayer.Models;
+using LiteNetLib;
 
 namespace hololensMultiplayer.Networking
 {
@@ -16,7 +10,7 @@ namespace hololensMultiplayer.Networking
 
         Queue<BaseMessageType> OutgoingMessages { get; set; }
 
-        bool AddInMessage(byte[] message, PlayerData player);
+        bool AddInMessage(byte[] message, NetPeer player);
 
         bool AddOutMessage(BaseMessageType objectToSend);
 

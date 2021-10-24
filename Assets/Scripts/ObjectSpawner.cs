@@ -1,9 +1,5 @@
 using hololensMultiplayer;
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
 using UnityEngine;
 using Zenject;
 
@@ -28,7 +24,7 @@ public class ObjectSpawner : MonoBehaviour
         var newPlayerGO = networkObject.gameObject;
         newPlayerGO.SetActive(true);
         newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
-        dataManager.Objects.Add(networkObject.objectData.ID, networkObject.objectData);
+        dataManager.Objects.Add(networkObject.objectData.objectTransform.ObjectID, networkObject.objectData);
     }
 }
 

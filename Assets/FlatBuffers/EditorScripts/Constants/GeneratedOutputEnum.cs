@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 
-namespace UnityFbs.EditorScripts.Constants {
+namespace UnityFbs.EditorScripts.Constants
+{
     enum GeneratedOutputEnum : byte {
         [Argument("--csharp")]
         cs,

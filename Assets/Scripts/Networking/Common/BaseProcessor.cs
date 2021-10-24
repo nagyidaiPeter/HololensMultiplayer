@@ -1,10 +1,7 @@
 ﻿using hololensMultiplayer.Models;
-
-using System;
+using LiteNetLib;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Zenject;
 
 namespace hololensMultiplayer.Networking
 {
@@ -13,7 +10,10 @@ namespace hololensMultiplayer.Networking
         public Queue<BaseMessageType> IncomingMessages { get; set; } = new Queue<BaseMessageType>();
         public Queue<BaseMessageType> OutgoingMessages { get; set; } = new Queue<BaseMessageType>();
 
-        public abstract bool AddInMessage(byte[] message, PlayerData player);
+        [Inject]
+        protected DataManager dataManager;
+
+        public abstract bool AddInMessage(byte[] message, NetPeer player);
 
         public abstract bool AddOutMessage(BaseMessageType objectToSend);
 

@@ -1,17 +1,14 @@
-﻿using Lidgren.Network;
-using Newtonsoft.Json;
+﻿
 using hololensMultiplayer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
 using FlatBuffers;
 using hololensMulti;
+using LiteNetLib;
+using UnityEngine;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -21,21 +18,11 @@ namespace Assets.Scripts.SERVER.Processors
         public new Queue<Welcome> OutgoingMessages { get; set; } = new Queue<Welcome>();
 
         [Inject]
-        private NetClient netClient;
+        private Client client;
 
-        [Inject]
-        private DataManager dataManager;
-
-
-        public override bool AddInMessage(byte[] message, PlayerData player)
+        public override bool AddInMessage(byte[] message, NetPeer player)
         {
-            ByteBuffer bb = new ByteBuffer(message);
-            WelcomeFB welcomeFB = WelcomeFB.GetRootAsWelcomeFB(bb);
-            Welcome welcome = new Welcome();
-
-            welcome.SenderID = welcomeFB.PlayerID;
-            welcome.Name = welcomeFB.PlayerName;
-
+            Welcome welcome = new Welcome(message);
             IncomingMessages.Enqueue(welcome);
             return true;
         }
@@ -55,7 +42,12 @@ namespace Assets.Scripts.SERVER.Processors
             {
                 var welcomeMsg = IncomingMessages.Dequeue();
 
-                dataManager.LocalPlayer.ID = welcomeMsg.SenderID;
+                Debug.Log($"Server welcomed us: {welcomeMsg.SenderID}");
+
+                dataManager.LocalPlayerID = welcomeMsg.SenderID;
+                dataManager.Players.Add(dataManager.LocalPlayerID, new PlayerData());
+
+                dataManager.LocalPlayer.playerObject = GameObject.FindObjectOfType<LocalPlayer>().gameObject;
 
                 OutgoingMessages.Enqueue(welcomeMsg);
             }
@@ -64,17 +56,9 @@ namespace Assets.Scripts.SERVER.Processors
         public override void ProcessOutgoing()
         {
             while (OutgoingMessages.Any())
-            {
-                var msg = netClient.CreateMessage();
+            {             
                 var welcomeMsg = OutgoingMessages.Dequeue();
-
-                var body = Serializer.SerializeWelcome(welcomeMsg);
-
-                msg.Write((byte)MessageTypes.Welcome);
-                msg.Write(body.Length);
-                msg.Write(body);
-
-                netClient.SendMessage(msg, NetDeliveryMethod.ReliableOrdered);
+                client.Send(welcomeMsg.Serialize());
             }
         }
 

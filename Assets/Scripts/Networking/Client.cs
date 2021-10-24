@@ -1,113 +1,68 @@
-﻿using Assets.Scripts.SERVER;
 using Assets.Scripts.SERVER.Processors;
-
-using FlatBuffers;
-
-using hololensMultiplayer;
 using hololensMultiplayer.Models;
 using hololensMultiplayer.Networking;
-
-using Lidgren.Network;
-
+using hololensMultiplayer.Packets;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.UI;
 
-using Zenject;
-
-public class Client : MonoBehaviour
+namespace hololensMultiplayer
 {
-    public bool ClientIsServer = false;
-
-    public string Address = "127.0.0.1:12345";
-
-    private NetClient client;
-    private DataManager dataManager;
-
-    //In MS
-    public float UpdateTime = 0.01666f;
-
-    public Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
-
-    [Inject]
-    public void Init(NetClient client, DataManager dataManager, ClientPlayTransProcessor clientPlayTransProcessor, ClientDisconnectProcessor clientDisconnect,
-        ClientWelcomeProcessor clientWelcome, ClientObjectProcessor objectProcessor)
+    public class Client : NetManager
     {
-        this.client = client;
-        this.dataManager = dataManager;
+        public readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+        public readonly EventBasedNetListener listener;
 
-        MessageProcessors.Add(MessageTypes.PlayerTransform, clientPlayTransProcessor);
-        MessageProcessors.Add(MessageTypes.Welcome, clientWelcome);
-        MessageProcessors.Add(MessageTypes.Disconnect, clientDisconnect);
-        MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
-    }
+        public bool IsConnected { get; private set; }
 
-    public void SetAddress(string address)
-    {
-        Address = address;
-    }
-
-    void Start()
-    {
-        StartCoroutine(ClientUpdate());
-    }
-
-    public void Connect()
-    {
-        var split = Address.Split(':');
-        client.Connect(host: split[0], port: int.Parse(split[1]));
-    }
-
-    public void Disconnect()
-    {
-        client.Disconnect("exit");
-        StopAllCoroutines();
-    }
-
-    private IEnumerator ClientUpdate()
-    {
-        while (true)
+        public Client(EventBasedNetListener listener) : base(listener)
         {
-            NetIncomingMessage message;
-            while ((message = client.ReadMessage()) != null)
-            {
-                switch (message.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        byte[] header = message.ReadBytes(5);
-                        ByteBuffer headerBuffer = new ByteBuffer(header);
-                        MessageTypes msgType = (MessageTypes)header[0];
-                        int msgLenth = headerBuffer.GetInt(1);
-
-                        byte[] content = message.ReadBytes(msgLenth);
-                        MessageProcessors[msgType].AddInMessage(content, null);
-                        break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        Debug.Log($"Connection status: {message.SenderConnection.Status} Data: {message.ReadString()}");
-                        break;
-                }
-            }
-
-
-            foreach (var handlerPair in MessageProcessors)
-            {
-                handlerPair.Value.ProcessIncoming();
-                handlerPair.Value.ProcessOutgoing();
-            }
-
-            yield return new WaitForSeconds(UpdateTime);
+            this.listener = listener;
         }
 
-    }
-    private void OnDestroy()
-    {
-        Disconnect();
+        public new void Stop()
+        {
+            listener.PeerConnectedEvent -= PeerConnected;
+            listener.PeerDisconnectedEvent -= PeerDisconnected;
+            listener.NetworkReceiveEvent -= NetworkDataReceived;
+
+            base.Stop();
+        }
+
+        public new void Start()
+        {
+            listener.PeerConnectedEvent += PeerConnected;
+            listener.PeerDisconnectedEvent += PeerDisconnected;
+            listener.NetworkReceiveEvent += NetworkDataReceived;
+
+            base.Start();
+        }
+
+        private void NetworkDataReceived(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
+        {
+            netPacketProcessor.ReadAllPackets(reader, peer);
+        }
+
+        private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+        {
+            Debug.Log("[CLIENT] We disconnected because " + disconnectInfo.Reason);
+            IsConnected = false;
+        }
+
+        private void PeerConnected(NetPeer peer)
+        {
+            Debug.Log("[CLIENT] We connected to " + peer.EndPoint);
+            IsConnected = true;
+        }
+
+        public void Send(WrapperPacket wrapperPacket)
+        {
+           FirstPeer.Send(netPacketProcessor.Write(wrapperPacket), (byte)wrapperPacket.UdpChannel, wrapperPacket.deliveryMethod);
+        }
     }
 }

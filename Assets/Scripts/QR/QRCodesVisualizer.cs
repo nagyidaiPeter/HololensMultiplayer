@@ -1,10 +1,7 @@
-﻿using System.Collections;
-
+﻿
 using System.Collections.Generic;
 
 using UnityEngine;
-
-using Microsoft.MixedReality.QR;
 namespace QRTracking
 {
     public class QRCodesVisualizer : MonoBehaviour

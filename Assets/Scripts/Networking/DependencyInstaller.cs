@@ -1,21 +1,32 @@
-using Assets.Scripts.SERVER;
 using Assets.Scripts.SERVER.Processors;
 
 using hololensMultiplayer;
-
-using Lidgren.Network;
-
-using UnityEngine;
+using LiteNetLib;
 using Zenject;
 
 public class DependencyInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
-        Container.Bind<NetClient>().FromFactory<NetClientFactory>().AsSingle().NonLazy();
-        Container.Bind<NetServer>().FromFactory<NetServerFactory>().AsSingle().NonLazy();        
-        Container.Bind<DataManager>().AsSingle().NonLazy();
+        InstallCoreDependencies();
 
+        InstallClientDependencies();
+
+        InstallServerDependencies();
+    }
+
+    public void InstallCoreDependencies()
+    {
+        Container.Bind<DataManager>().AsSingle().NonLazy();
+        Container.Bind<EventBasedNetListener>().AsTransient();
+
+        //Factories
+        Container.BindFactory<string, NetworkPlayer, NetworkPlayer.Factory>().FromFactory<PrefabResourceFactory<NetworkPlayer>>();
+        Container.BindFactory<UnityEngine.Object, NetworkObject, NetworkObject.ObjectFactory>().FromFactory<NetworkObject.ObjectFactory>();
+    }
+
+    public void InstallServerDependencies()
+    {
         Container.Bind<Server>().AsSingle().NonLazy();
 
         //Server processors
@@ -23,36 +34,16 @@ public class DependencyInstaller : MonoInstaller
         Container.Bind<ServerWelcomeProcessor>().AsSingle().NonLazy();
         Container.Bind<ServerDisconnectProcessor>().AsSingle().NonLazy();
         Container.Bind<ServerObjectProcessor>().AsSingle().NonLazy();
+    }
+
+    public void InstallClientDependencies()
+    {
+        Container.Bind<Client>().AsSingle().NonLazy();
 
         //Client processors
         Container.Bind<ClientPlayTransProcessor>().AsSingle().NonLazy();
         Container.Bind<ClientWelcomeProcessor>().AsSingle().NonLazy();
         Container.Bind<ClientDisconnectProcessor>().AsSingle().NonLazy();
         Container.Bind<ClientObjectProcessor>().AsSingle().NonLazy();
-
-
-        Container.BindFactory<string, NetworkPlayer, NetworkPlayer.Factory>().FromFactory<PrefabResourceFactory<NetworkPlayer>>();
-        Container.BindFactory<UnityEngine.Object, NetworkObject, NetworkObject.ObjectFactory>().FromFactory<NetworkObject.ObjectFactory>();
-    }
-
-    class NetClientFactory : IFactory<NetClient>
-    {
-        public NetClient Create()
-        {
-            var config = new NetPeerConfiguration("HRM");
-            var client = new NetClient(config);
-            client.Start();
-            return client;
-        }
-    }
-
-
-    class NetServerFactory : IFactory<NetServer>
-    {
-        public NetServer Create()
-        {
-            var config = new NetPeerConfiguration("HRM") { Port = 12345 };
-            return new NetServer(config);
-        }
     }
 }

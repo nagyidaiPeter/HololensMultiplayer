@@ -1,17 +1,14 @@
-﻿using Lidgren.Network;
-using Newtonsoft.Json;
+﻿
 using hololensMultiplayer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
 using hololensMulti;
 using FlatBuffers;
+using LiteNetLib;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -21,20 +18,14 @@ namespace Assets.Scripts.SERVER.Processors
         public new Queue<Welcome> OutgoingMessages { get; set; } = new Queue<Welcome>();
 
         [Inject]
-        private NetServer netServer;
+        private Server netServer;
 
         [Inject]
-        private DataManager dataManager;
+        private NetworkPlayer.Factory playerFactory;
 
-        public override bool AddInMessage(byte[] message, PlayerData player)
+        public override bool AddInMessage(byte[] message, NetPeer player)
         {
-            ByteBuffer bb = new ByteBuffer(message);
-            WelcomeFB welcomeFB = WelcomeFB.GetRootAsWelcomeFB(bb);
-            Welcome welcome = new Welcome();
-
-            welcome.SenderID = welcomeFB.PlayerID;
-            welcome.Name = welcomeFB.PlayerName;
-
+            Welcome welcome = new Welcome(message);
             IncomingMessages.Enqueue(welcome);
             return true;
         }
@@ -53,9 +44,21 @@ namespace Assets.Scripts.SERVER.Processors
             while (IncomingMessages.Any())
             {
                 var welcomeMsg = IncomingMessages.Dequeue();
-                var player = dataManager.GetPlayerById(welcomeMsg.SenderID);
-                player.Name = welcomeMsg.Name;
-                Debug.Log($"Client answered: {player.Name}");
+
+                if (!dataManager.Players.ContainsKey(welcomeMsg.SenderID))
+                {
+                    PlayerData newPlayer = new PlayerData();
+                    newPlayer.ID = welcomeMsg.SenderID;
+
+                    var networkPlayer = playerFactory.Create("Players/PlayerHead");
+                    var newPlayerGO = networkPlayer.gameObject;
+                    newPlayerGO.SetActive(true);
+                    newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
+                    newPlayer.playerObject = newPlayerGO;
+                    newPlayer.Name = welcomeMsg.Name;
+                    networkPlayer.playerData = newPlayer;
+                    dataManager.Players.Add(newPlayer.ID, newPlayer);
+                }
             }
         }
 

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityFbs.EditorScripts.Settings {
+namespace UnityFbs.EditorScripts.Settings
+{
     class UnityFbsSettingsIMGUIRegister : SettingsProvider {
 
         private SerializedObject settings;

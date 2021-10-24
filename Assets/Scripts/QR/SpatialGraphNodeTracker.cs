@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Microsoft.MixedReality.Toolkit.Utilities;
 
 using Microsoft.MixedReality.OpenXR;
 

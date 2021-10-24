@@ -1,12 +1,12 @@
-﻿using Assets.Scripts.SERVER;
-
+﻿
+using Assets.Scripts.SERVER.Processors;
 using hololensMultiplayer;
-
-using Lidgren.Network;
-
+using hololensMultiplayer.Models;
+using hololensMultiplayer.Networking;
+using hololensMultiplayer.Packets;
+using LiteNetLib;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 using Zenject;
@@ -17,27 +17,45 @@ public class ServerHandler : MonoBehaviour
 
     public bool RunningServer = false;
 
-    //In SEC
-    public float UpdateTime = 0.00833f;
+    public string Address = "127.0.0.1:12345";
 
-    [Inject]
+    //In SEC
+    public float UpdateTime = 0.016666f;
+
     private DataManager dataManager;
 
+    private Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
+
+
     [Inject]
-    public void Init(Server ser)
+    public void Init(Server server, DataManager dataManager,
+            ServerPlayTransProcessor playerTransformProc, ServerWelcomeProcessor serverWelcomeProcessor,
+            ServerDisconnectProcessor disconnectProcessor, ServerObjectProcessor objectProcessor)
     {
-        server = ser;
+        this.server = server;
+        this.dataManager = dataManager;
+
+        MessageProcessors.Add(MessageTypes.PlayerTransform, playerTransformProc);
+        MessageProcessors.Add(MessageTypes.Welcome, serverWelcomeProcessor);
+        MessageProcessors.Add(MessageTypes.Disconnect, disconnectProcessor);
+        MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
+
+        this.server.netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
     }
 
-    void Start()
+    private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
     {
-        StartCoroutine(ServerUpdate());
+        MessageProcessors[wrapperPacket.messageType].AddInMessage(wrapperPacket.packetData, peer);
     }
 
     public void StartServer()
     {
         Debug.Log("Starting server..");
-        server.StartServer();
+        server.listener.PeerDisconnectedEvent += PeerDisconnected;
+        server.listener.ConnectionRequestEvent += OnConnectionRequest;
+
+        var split = Address.Split(':');
+        server.Start(int.Parse(split[1]));        
         RunningServer = true;
         dataManager.IsServer = true;
 
@@ -47,6 +65,8 @@ public class ServerHandler : MonoBehaviour
         }
 
         //GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
+
+        StartCoroutine(ServerUpdate());       
     }
 
     private void OnDestroy()
@@ -57,20 +77,52 @@ public class ServerHandler : MonoBehaviour
     {
         Debug.Log("Stopping server..");
         RunningServer = false;
-        dataManager.IsServer = false;        
+        dataManager.IsServer = false;
         StopAllCoroutines();
-        server.StoptServer();
+        server.Stop();
+
+        server.listener.PeerDisconnectedEvent -= PeerDisconnected;
+        server.listener.ConnectionRequestEvent -= OnConnectionRequest;
+    }
+
+    private void OnConnectionRequest(ConnectionRequest request)
+    {
+        if (server.ConnectedPeersCount < server.maxConnections)
+        {
+            Debug.Log("New peer wants to connect!");
+            request.AcceptIfKey("hololensMultiplayer");
+        }
+        else
+        {
+            request.Reject();
+        }
+    }
+
+    private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+    {
+        DisconnectMessage disconnectMessage = new DisconnectMessage();
+        disconnectMessage.DisconnectedUserID = peer.Id;
+        MessageProcessors[MessageTypes.Disconnect].AddOutMessage(disconnectMessage);
     }
 
     private IEnumerator ServerUpdate()
     {
-        while (true)
+        while (RunningServer)
         {
-            if (RunningServer)
+            server.PollEvents();
+            foreach (var processor in MessageProcessors)
             {
-                server.ReadAndProcess();
-                server.Reactions();
+                try
+                {
+                    processor.Value.ProcessIncoming();
+                    processor.Value.ProcessOutgoing();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError(ex);
+                }
             }
+
 
             yield return new WaitForSeconds(UpdateTime);
         }

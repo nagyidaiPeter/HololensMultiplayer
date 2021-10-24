@@ -7,13 +7,7 @@ using Assets.Scripts.SERVER.Processors;
 using hololensMultiplayer;
 using hololensMultiplayer.Models;
 
-using HRM;
-
-using Microsoft.MixedReality.Toolkit.Input;
-using Microsoft.MixedReality.Toolkit.UI;
-
 using UnityEngine;
-using UnityEngine.UI;
 
 using Zenject;
 
@@ -48,43 +42,37 @@ public class NetworkObject : MonoBehaviour
 
     public void ClaimObject()
     {
-        OwnerID = dataManager.LocalPlayer.ID;
-        ObjectTransformMsg transformMsg = new ObjectTransformMsg();
-        transformMsg.ObjectID = objectData.ID;
-        transformMsg.OwnerID = OwnerID;
-        transformMsg.SenderID = OwnerID;
+        OwnerID = dataManager.LocalPlayerID;
+        objectData.objectTransform.OwnerID = OwnerID;
+        objectData.objectTransform.SenderID = OwnerID;
 
-        transformMsg.ObjectType = objectData.ObjectType;
-        transformMsg.Pos = transform.localPosition;
-        transformMsg.Rot = transform.localRotation;
-        transformMsg.Scale = transform.localScale;
+        objectData.objectTransform.Pos = transform.localPosition;
+        objectData.objectTransform.Rot = transform.localRotation;
+        objectData.objectTransform.Scale = transform.localScale;
 
-        objectProcessor.AddOutMessage(transformMsg);
+        objectProcessor.AddOutMessage(objectData.objectTransform);
     }
 
     private IEnumerator SendData()
     {
         while (true)
         {
-            if (OwnerID != dataManager.LocalPlayer.ID)
+            if (OwnerID != dataManager.LocalPlayerID)
             {
-                transform.localPosition = objectData.Position;
-                transform.localRotation = objectData.Rotation;
-                transform.localScale = objectData.Scale;
+                transform.localPosition = objectData.objectTransform.Pos;
+                transform.localRotation = objectData.objectTransform.Rot;
+                transform.localScale = objectData.objectTransform.Scale;
             }
             else
             {
-                ObjectTransformMsg transformMsg = new ObjectTransformMsg();
-                transformMsg.ObjectID = objectData.ID;
-                transformMsg.OwnerID = OwnerID;
-                transformMsg.SenderID = OwnerID;
+                objectData.objectTransform.OwnerID = OwnerID;
+                objectData.objectTransform.SenderID = OwnerID;
 
-                transformMsg.ObjectType = objectData.ObjectType;
-                transformMsg.Pos = transform.localPosition;
-                transformMsg.Rot = transform.localRotation;
-                transformMsg.Scale = transform.localScale;
+                objectData.objectTransform.Pos = transform.localPosition;
+                objectData.objectTransform.Rot = transform.localRotation;
+                objectData.objectTransform.Scale = transform.localScale;
 
-                objectProcessor.AddOutMessage(transformMsg);
+                objectProcessor.AddOutMessage(objectData.objectTransform);
             }
             yield return new WaitForSeconds(1 / RefreshRate);
         }
@@ -93,17 +81,17 @@ public class NetworkObject : MonoBehaviour
     public void DisclaimObject()
     {
         OwnerID = -1;
-        ObjectTransformMsg transformMsg = new ObjectTransformMsg();
-        transformMsg.ObjectID = objectData.ID;
-        transformMsg.OwnerID = OwnerID;
-        transformMsg.SenderID = OwnerID;
 
-        transformMsg.ObjectType = objectData.ObjectType;
-        transformMsg.Pos = transform.localPosition;
-        transformMsg.Rot = transform.localRotation;
-        transformMsg.Scale = transform.localScale;
+        objectData.objectTransform.ObjectID = objectData.objectTransform.ObjectID;
+        objectData.objectTransform.OwnerID = OwnerID;
+        objectData.objectTransform.SenderID = OwnerID;
 
-        objectProcessor.AddOutMessage(transformMsg);
+        objectData.objectTransform.ObjectType = objectData.objectTransform.ObjectType;
+        objectData.objectTransform.Pos = transform.localPosition;
+        objectData.objectTransform.Rot = transform.localRotation;
+        objectData.objectTransform.Scale = transform.localScale;
+
+        objectProcessor.AddOutMessage(objectData.objectTransform);
     }
 
     public class ObjectFactory : PlaceholderFactory<UnityEngine.Object, NetworkObject>
@@ -163,8 +151,9 @@ public class NetworkObject : MonoBehaviour
                 }
                 instance.objectData = new ObjectData();
                 instance.objectData.gameObject = gameObject;
-                instance.objectData.ObjectType = prefab.name;
-                instance.objectData.ID = ID;
+                instance.objectData.objectTransform = new ObjectTransform();
+                instance.objectData.objectTransform.ObjectType = prefab.name;
+                instance.objectData.objectTransform.ObjectID = ID;
                 return instance;
             }
 

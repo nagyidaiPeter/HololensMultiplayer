@@ -1,16 +1,8 @@
-using Assets.Scripts.SERVER;
 
-using hololensMulti;
-
+using hololensMultiModels;
 using hololensMultiplayer;
 using hololensMultiplayer.Models;
-
-using Lidgren.Network;
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
+using LiteNetLib;
 using UnityEngine;
 
 using Zenject;
@@ -22,50 +14,43 @@ public class LocalPlayer : MonoBehaviour
     [Inject]
     private DataManager dataManager;
 
-    [Inject]
-    private NetClient netclientclient;
-
-    private Client client;
+    private ClientHandler client;
 
     public Transform RH, LH;
 
     void Start()
     {
-        dataManager.LocalPlayer = new PlayerData();
-        dataManager.LocalPlayer.playerObject = gameObject;
-
-        client = FindObjectOfType<Client>(true);
+        client = FindObjectOfType<ClientHandler>(true);
     }
-
 
     void Update()
     {
-        if (netclientclient.ConnectionStatus == NetConnectionStatus.Connected && dataManager.LocalPlayer != null && dataManager.LocalPlayer.playerObject.activeSelf)
+        if (client.IsConnected && dataManager.LocalPlayer != null &&
+            dataManager.LocalPlayer.playerObject != null && dataManager.LocalPlayer.playerObject.activeSelf)
         {
-            PlayerTransform playerTransform = new PlayerTransform();
-            playerTransform.SenderID = dataManager.LocalPlayer.ID;
+            dataManager.LocalPlayer.playerTransform.SenderID = dataManager.LocalPlayerID;
 
-            playerTransform.Pos = qrPos.parent.InverseTransformPoint(transform.position);
-            playerTransform.Rot = transform.localRotation;
-            playerTransform.QrOffset = qrPos.parent.eulerAngles;
+            dataManager.LocalPlayer.playerTransform.Pos = qrPos.parent.InverseTransformPoint(transform.position);
+            dataManager.LocalPlayer.playerTransform.Rot = transform.localRotation;
+            dataManager.LocalPlayer.playerTransform.QrRotationOffset = qrPos.parent.eulerAngles;
 
             if (RH != null)
             {
-                playerTransform.RHFingers = RH.GetComponent<HandTracker>().handState;
-                playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
-                playerTransform.RHRot = RH.localRotation;
-                playerTransform.RHActive = RH.GetComponent<HandTracker>().IsTracked;
+                dataManager.LocalPlayer.playerTransform.RHFingers = RH.GetComponent<HandTracker>().handState;
+                dataManager.LocalPlayer.playerTransform.RHPos = transform.InverseTransformPoint(RH.position);
+                dataManager.LocalPlayer.playerTransform.RHRot = RH.localRotation;
+                dataManager.LocalPlayer.playerTransform.RHActive = RH.GetComponent<HandTracker>().IsTracked;
             }
 
             if (LH != null)
             {
-                playerTransform.LHFingers = LH.GetComponent<HandTracker>().handState;
-                playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
-                playerTransform.LHRot = LH.localRotation;
-                playerTransform.LHActive = LH.GetComponent<HandTracker>().IsTracked;
+                dataManager.LocalPlayer.playerTransform.LHFingers = LH.GetComponent<HandTracker>().handState;
+                dataManager.LocalPlayer.playerTransform.LHPos = transform.InverseTransformPoint(LH.position);
+                dataManager.LocalPlayer.playerTransform.LHRot = LH.localRotation;
+                dataManager.LocalPlayer.playerTransform.LHActive = LH.GetComponent<HandTracker>().IsTracked;
             }
 
-            client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(playerTransform);
+            client.MessageProcessors[MessageTypes.PlayerTransform].AddOutMessage(dataManager.LocalPlayer.playerTransform);
         }
     }
 }

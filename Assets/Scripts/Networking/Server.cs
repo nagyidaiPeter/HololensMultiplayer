@@ -1,140 +1,83 @@
-﻿using Assets.Scripts.SERVER;
-using Assets.Scripts.SERVER.Processors;
+﻿using Assets.Scripts.SERVER.Processors;
 
 using FlatBuffers;
 
 using hololensMultiplayer.Models;
 using hololensMultiplayer.Networking;
-
-using Lidgren.Network;
-
+using hololensMultiplayer.Packets;
+using LiteNetLib;
+using LiteNetLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
 
 namespace hololensMultiplayer
 {
-    public class Server
+    public class Server : NetManager
     {
-        private NetServer server;
+        public readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+        public readonly EventBasedNetListener listener;
+
         private int ConnectedPlayers = 0;
-        Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
+        public int maxConnections = 16;
 
-        private DataManager dataManager;
-
-        public Server(NetServer serverPeer, ServerPlayTransProcessor playerTransformProc, ServerWelcomeProcessor serverWelcomeProcessor,
-            ServerDisconnectProcessor disconnectProcessor, ServerObjectProcessor objectProcessor, DataManager dataMan)
+        public Server(EventBasedNetListener listener) : base(listener)
         {
-            server = serverPeer;
-            dataManager = dataMan;
-
-            MessageProcessors.Add(MessageTypes.PlayerTransform, playerTransformProc);
-            MessageProcessors.Add(MessageTypes.Welcome, serverWelcomeProcessor);
-            MessageProcessors.Add(MessageTypes.Disconnect, disconnectProcessor);
-            MessageProcessors.Add(MessageTypes.ObjectTransform, objectProcessor);
+            this.listener = listener;
         }
 
-        internal void StoptServer()
+        public new void Stop()
         {
-            server.Shutdown("bye");
+            listener.PeerConnectedEvent -= PeerConnected;
+            listener.NetworkReceiveEvent -= NetworkDataReceived;
+
+            base.Stop();
         }
 
-        public void StartServer()
+        public new void Start(int port)
         {
-            server.Start();
+            listener.PeerConnectedEvent += PeerConnected;
+            listener.NetworkReceiveEvent += NetworkDataReceived;
+
+            base.Start(port);
         }
 
-        public void Reactions()
+        private void PeerConnected(NetPeer peer)
         {
-            foreach (var processor in MessageProcessors)
-            {
-                processor.Value.ProcessOutgoing();
-            }
+            ConnectedPlayers++;
+            var newPlayer = new PlayerData();
+            newPlayer.connection = peer;
+            newPlayer.ID = ConnectedPlayers;
+
+            //dataManager.Players.Add(newPlayer.ID, newPlayer);
+
+            //Welcome player
+            Welcome welcomeMsg = new Welcome();
+            welcomeMsg.SenderID = ConnectedPlayers;
+            welcomeMsg.Name = newPlayer.Name;
+
+            var msgBody = welcomeMsg.Serialize();
+
+            peer.Send(netPacketProcessor.Write(msgBody), DeliveryMethod.ReliableOrdered);
         }
 
-        public void ReadAndProcess()
+        private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
         {
-            NetIncomingMessage message;
-            while ((message = server.ReadMessage()) != null)
-            {
-                PlayerData player =
-                    dataManager.Players.FirstOrDefault(x => x.Value.connection == message.SenderConnection).Value;
-                switch (message.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        if (player != null)
-                        {
-                            byte[] header = message.ReadBytes(5);
-                            ByteBuffer headerBuffer = new ByteBuffer(header);
-                            MessageTypes msgType = (MessageTypes)header[0];
-                            int msgLenth = headerBuffer.GetInt(1);
+            netPacketProcessor.ReadAllPackets(reader, peer);
+        }
 
-                            byte[] content = message.ReadBytes(msgLenth);
 
-                            MessageProcessors[msgType].AddInMessage(content, player);
-                        }
-                        break;
+        public void SendToAll(WrapperPacket packet)
+        {
+            SendToAll(netPacketProcessor.Write(packet), (byte)packet.UdpChannel, packet.deliveryMethod);
+        }
 
-                    case NetIncomingMessageType.StatusChanged:
-
-                        switch (message.SenderConnection.Status)
-                        {
-                            case NetConnectionStatus.None:
-                                break;
-                            case NetConnectionStatus.InitiatedConnect:
-                                break;
-                            case NetConnectionStatus.ReceivedInitiation:
-                                break;
-                            case NetConnectionStatus.RespondedAwaitingApproval:
-                                break;
-                            case NetConnectionStatus.RespondedConnect:
-                                break;
-                            case NetConnectionStatus.Connected:
-                                ConnectedPlayers++;
-                                var newPlayer = new PlayerData();
-                                newPlayer.connection = message.SenderConnection;
-                                newPlayer.ID = ConnectedPlayers;
-
-                                dataManager.Players.Add(newPlayer.ID, newPlayer);
-
-                                //Welcome player
-                                Welcome welcomeMsg = new Welcome();
-                                welcomeMsg.SenderID = ConnectedPlayers;
-                                welcomeMsg.Name = newPlayer.Name;
-
-                                var msgBody = Serializer.SerializeWelcome(welcomeMsg);
-
-                                var msg = server.CreateMessage();
-                                msg.Write((sbyte)MessageTypes.Welcome);
-                                msg.Write(msgBody.Length);
-                                msg.Write(msgBody);
-                                newPlayer.connection.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 0);
-                                break;
-                            case NetConnectionStatus.Disconnecting:
-                                break;
-                            case NetConnectionStatus.Disconnected:
-                                if (player != null)
-                                {
-                                    DisconnectMessage disconnectMessage = new DisconnectMessage();
-                                    disconnectMessage.DisconnectedUserID = player.ID;
-                                    Debug.Log($"Dc happened: {player.ID} from players: {dataManager.Players.Count()}");
-                                    MessageProcessors[MessageTypes.Disconnect].AddOutMessage(disconnectMessage);
-                                }
-                                break;
-                        }
-                        break;
-                }
-            }
-
-            foreach (var processor in MessageProcessors)
-            {
-                processor.Value.ProcessIncoming();
-            }
+        public void SendTo(WrapperPacket packet, NetPeer peer)
+        {
+            peer.Send(netPacketProcessor.Write(packet), (byte)packet.UdpChannel, packet.deliveryMethod);
         }
     }
 }

@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using hololensMultiplayer.Packets;
 
 namespace hololensMultiplayer.Models
 {
-
     public enum MessageTypes : byte
     {
         PlayerTransform,
         Welcome,
-        PlayerInfo,
         Disconnect,
         ObjectTransform
     }
 
-    public class BaseMessageType
+    public abstract class BaseMessageType
     {
         public MessageTypes MsgType { get; set; }
+
         public int SenderID { get; set; }
+
+        public abstract WrapperPacket Serialize();
+
+        public abstract void Deserialize(byte[] data);
     }
 }

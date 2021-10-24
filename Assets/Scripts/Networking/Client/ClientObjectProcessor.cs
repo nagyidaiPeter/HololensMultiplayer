@@ -1,63 +1,38 @@
 ﻿using FlatBuffers;
-using Lidgren.Network;
-using Newtonsoft.Json;
 using hololensMultiplayer;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
 using hololensMulti;
+using LiteNetLib;
 
 namespace Assets.Scripts.SERVER.Processors
 {
     public class ClientObjectProcessor : BaseProcessor
     {
-        public new Queue<ObjectTransformMsg> IncomingMessages { get; set; } = new Queue<ObjectTransformMsg>();
+        public new Queue<ObjectTransform> IncomingMessages { get; set; } = new Queue<ObjectTransform>();
 
-        public new Queue<ObjectTransformMsg> OutgoingMessages { get; set; } = new Queue<ObjectTransformMsg>();
-
-        [Inject]
-        private NetClient netClient;
+        public new Queue<ObjectTransform> OutgoingMessages { get; set; } = new Queue<ObjectTransform>();
 
         [Inject]
-        private DataManager dataManager;
+        private Client client;
 
         [Inject]
         private NetworkObject.ObjectFactory objectFactory;
 
-        public override bool AddInMessage(byte[] message, PlayerData player)
+        public override bool AddInMessage(byte[] message, NetPeer peer)
         {
-            ByteBuffer bb = new ByteBuffer(message);
-            ObjectFB objectFB = ObjectFB.GetRootAsObjectFB(bb);
-
-            ObjectTransformMsg objectTransform = new ObjectTransformMsg();
-
-            objectTransform.ObjectID = objectFB.ObjectID;
-            objectTransform.OwnerID = objectFB.OwnerID;
-            objectTransform.ObjectType = objectFB.ObjectType;
-
-            if (objectFB.Pos.HasValue)
-                objectTransform.Pos = new Vector3(objectFB.Pos.Value.X, objectFB.Pos.Value.Y, objectFB.Pos.Value.Z);
-
-            if (objectFB.Rot.HasValue)
-                objectTransform.Rot = new Quaternion(objectFB.Rot.Value.X, objectFB.Rot.Value.Y, objectFB.Rot.Value.Z, objectFB.Rot.Value.W);
-
-            if (objectFB.Scale.HasValue)
-                objectTransform.Scale = new Vector3(objectFB.Scale.Value.X, objectFB.Scale.Value.Y, objectFB.Scale.Value.Z);
-
-
+            ObjectTransform objectTransform = new ObjectTransform(message);
             IncomingMessages.Enqueue(objectTransform);
             return true;
         }
 
         public override bool AddOutMessage(BaseMessageType objectToSend)
         {
-            if (objectToSend is ObjectTransformMsg ObjectTransform)
+            if (objectToSend is ObjectTransform ObjectTransform)
             {
                 OutgoingMessages.Enqueue(ObjectTransform);
                 return true;
@@ -78,11 +53,7 @@ namespace Assets.Scripts.SERVER.Processors
                 if (dataManager.Objects.ContainsKey(objectTransformMsg.ObjectID))
                 {
                     var objectTransform = dataManager.Objects[objectTransformMsg.ObjectID];
-                    objectTransform.ID = objectTransformMsg.ObjectID;
-                    objectTransform.OwnerID = objectTransformMsg.OwnerID;
-                    objectTransform.Position = objectTransformMsg.Pos;
-                    objectTransform.Rotation = objectTransformMsg.Rot;
-                    objectTransform.Scale = objectTransformMsg.Scale;
+                    objectTransform.objectTransform = objectTransformMsg;
                 }
                 else
                 {
@@ -103,18 +74,8 @@ namespace Assets.Scripts.SERVER.Processors
             while (OutgoingMessages.Any())
             {
                 var posMsg = OutgoingMessages.Dequeue();
-
-                var msg = netClient.CreateMessage();
-
-                posMsg.SenderID = dataManager.LocalPlayer.ID;
-
-                var bytes = Serializer.SerializeObjectTransform(posMsg);
-
-                msg.Write((byte)MessageTypes.ObjectTransform);
-                msg.Write(bytes.Length);
-                msg.Write(bytes);
-
-                netClient.SendMessage(msg, NetDeliveryMethod.Unreliable, 0);
+                posMsg.SenderID = dataManager.LocalPlayerID;
+                client.Send(posMsg.Serialize());
             }
         }
 

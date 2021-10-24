@@ -1,11 +1,4 @@
-﻿using hololensMultiplayer;
-using hololensMultiplayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace hololensMultiplayer
 {
@@ -13,8 +6,16 @@ namespace hololensMultiplayer
     {
         public Dictionary<int, PlayerData> Players = new Dictionary<int, PlayerData>();
         public Dictionary<int, ObjectData> Objects = new Dictionary<int, ObjectData>();
-        public PlayerData LocalPlayer;
-      
+        public int LocalPlayerID;
+
+        public PlayerData LocalPlayer
+        {
+            get
+            {
+                return Players.ContainsKey(LocalPlayerID) ? Players[LocalPlayerID] : null;
+            }
+        }
+
         public bool Welcomed = false;
 
 
@@ -34,11 +35,6 @@ namespace hololensMultiplayer
                 if (_isServer)
                     StartingServerEvent?.Invoke();
             }
-        }
-
-        public PlayerData GetPlayerById(int ID)
-        {
-            return Players[ID];
         }
 
         public DataManager()

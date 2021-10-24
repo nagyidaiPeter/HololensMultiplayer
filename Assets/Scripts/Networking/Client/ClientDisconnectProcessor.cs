@@ -1,17 +1,13 @@
-﻿using Lidgren.Network;
-using Newtonsoft.Json;
-using hololensMultiplayer;
-using System;
+﻿using hololensMultiplayer;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Models;
 using FlatBuffers;
 using hololensMulti;
+using LiteNetLib;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -21,10 +17,7 @@ namespace Assets.Scripts.SERVER.Processors
         public new Queue<DisconnectMessage> OutgoingMessages { get; set; } = new Queue<DisconnectMessage>();
 
         [Inject]
-        private NetServer netServer;
-
-        [Inject]
-        private DataManager dataManager;
+        private Server server;
 
         public override void ProcessIncoming()
         {
@@ -32,7 +25,7 @@ namespace Assets.Scripts.SERVER.Processors
             {
                 var dcMsg = IncomingMessages.Dequeue();
                 Debug.Log($"Player {dcMsg.DisconnectedUserID} disconnected..");
-                var player = dataManager.GetPlayerById(dcMsg.DisconnectedUserID);
+                var player = dataManager.Players.FirstOrDefault(x => x.Key == dcMsg.DisconnectedUserID).Value;
 
                 dataManager.Players.Remove(player.ID);
                 GameObject.Destroy(player.playerObject);
@@ -43,19 +36,12 @@ namespace Assets.Scripts.SERVER.Processors
         {
             while (OutgoingMessages.Any())
             {
-                var msg = netServer.CreateMessage();
-                var registerMsg = OutgoingMessages.Dequeue();
-
-                var body = JsonConvert.SerializeObject(registerMsg);
-                msg.Write((byte)MessageTypes.Disconnect);
-                msg.Write(body.Length);
-                msg.Write(body);
-
-                netServer.SendToAll(msg, NetDeliveryMethod.ReliableOrdered, 0);
+                var dcMsg = OutgoingMessages.Dequeue();
+                server.SendToAll(dcMsg.Serialize());
             }
         }
 
-        public override bool AddInMessage(byte[] message, PlayerData player)
+        public override bool AddInMessage(byte[] message, NetPeer player)
         {
             ByteBuffer bb = new ByteBuffer(message);
             DisconnectFB disconnectFB = DisconnectFB.GetRootAsDisconnectFB(bb);
