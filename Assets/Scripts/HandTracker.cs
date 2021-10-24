@@ -38,11 +38,11 @@ public class HandTracker : MonoBehaviour
             transform.position = pose.Position;
             transform.rotation = pose.Rotation;
 
-            handState.Pinky = HandPoseUtils.PinkyFingerCurl(handedness) * 100;
-            handState.Ring = HandPoseUtils.RingFingerCurl(handedness) * 100;
-            handState.Middle = HandPoseUtils.MiddleFingerCurl(handedness) * 100;
-            handState.Index = HandPoseUtils.IndexFingerCurl(handedness) * 100;
-            handState.Thumb = HandPoseUtils.ThumbFingerCurl(handedness) * 100;
+            handState.Pinky = HandPoseUtils.PinkyFingerCurl(handedness) * 90;
+            handState.Ring = HandPoseUtils.RingFingerCurl(handedness) * 90;
+            handState.Middle = HandPoseUtils.MiddleFingerCurl(handedness) * 90;
+            handState.Index = HandPoseUtils.IndexFingerCurl(handedness) * 90;
+            handState.Thumb = HandPoseUtils.ThumbFingerCurl(handedness) * 90;
         }
 
         foreach (Transform child in transform)

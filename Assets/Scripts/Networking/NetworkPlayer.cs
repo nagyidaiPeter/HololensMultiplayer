@@ -14,10 +14,18 @@ public class NetworkPlayer : MonoBehaviour
     public Transform RH, LH;
 
     [Header("Right fingers")]
-    public Transform RPinky, RRing, RMiddle, RIndex, RThumb;
+    public Transform RPinky;
+    public Transform RRing;
+    public Transform RMiddle;
+    public Transform RIndex;
+    public Transform RThumb;
 
     [Header("Left fingers")]
-    public Transform LPinky, LRing, LMiddle, LIndex, LThumb;
+    public Transform LPinky;
+    public Transform LRing;
+    public Transform LMiddle;
+    public Transform LIndex;
+    public Transform LThumb;
 
     [Inject]
     DataManager dataManager;
@@ -34,6 +42,17 @@ public class NetworkPlayer : MonoBehaviour
         }
     }
 
+    private void Curl(Transform parent, float curlage)
+    {
+        if (parent.GetComponent<FingerData>() is FingerData fingerData)
+            parent.localEulerAngles = new Vector3(curlage, 0, 0);
+
+        foreach (Transform child in parent)
+        {
+            Curl(child, curlage);
+        }
+    }
+
     void Update()
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.playerTransform.Pos, InterVel * Time.deltaTime);
@@ -46,11 +65,11 @@ public class NetworkPlayer : MonoBehaviour
             RH.localRotation = Quaternion.Lerp(RH.localRotation, playerData.playerTransform.RHRot, HandInterVel * Time.deltaTime);
             RH.gameObject.SetActive(playerData.playerTransform.RHActive);
 
-            RPinky.localEulerAngles = new Vector3(playerData.playerTransform.RHFingers.Pinky, 0);
-            RRing.localEulerAngles = new Vector3(playerData.playerTransform.RHFingers.Ring, 0);
-            RMiddle.localEulerAngles = new Vector3(playerData.playerTransform.RHFingers.Middle, 0);
-            RIndex.localEulerAngles = new Vector3(playerData.playerTransform.RHFingers.Index, 0);
-            RThumb.localEulerAngles = new Vector3(playerData.playerTransform.RHFingers.Thumb, 0);
+            Curl(RPinky, -playerData.playerTransform.RHFingers.Pinky);
+            Curl(RRing, -playerData.playerTransform.RHFingers.Ring);
+            Curl(RMiddle, -playerData.playerTransform.RHFingers.Middle);
+            Curl(RIndex, -playerData.playerTransform.RHFingers.Index);
+            Curl(RThumb, playerData.playerTransform.RHFingers.Thumb);
         }
 
         if (LH != null)
@@ -59,11 +78,11 @@ public class NetworkPlayer : MonoBehaviour
             LH.localRotation = Quaternion.Lerp(LH.localRotation, playerData.playerTransform.LHRot, HandInterVel * Time.deltaTime);
             LH.gameObject.SetActive(playerData.playerTransform.LHActive);
 
-            LPinky.localEulerAngles = new Vector3(playerData.playerTransform.LHFingers.Pinky, 0);
-            LRing.localEulerAngles = new Vector3(playerData.playerTransform.LHFingers.Ring, 0);
-            LMiddle.localEulerAngles = new Vector3(playerData.playerTransform.LHFingers.Middle, 0);
-            LIndex.localEulerAngles = new Vector3(playerData.playerTransform.LHFingers.Index, 0);
-            LThumb.localEulerAngles = new Vector3(playerData.playerTransform.LHFingers.Thumb, 0);
+            Curl(LPinky, playerData.playerTransform.LHFingers.Pinky);
+            Curl(LRing, playerData.playerTransform.LHFingers.Ring);
+            Curl(LMiddle, playerData.playerTransform.LHFingers.Middle);
+            Curl(LIndex, playerData.playerTransform.LHFingers.Index);
+            Curl(LThumb, playerData.playerTransform.LHFingers.Thumb);
         }
     }
 

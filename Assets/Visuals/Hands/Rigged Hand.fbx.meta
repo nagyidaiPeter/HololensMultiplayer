@@ -30,6 +30,21 @@ ModelImporter:
   - first:
       74: 3863626297615085263
     second: Armature|Point|Point|00|Point|00
+  - first:
+      74: -2583135739409231831
+    second: Armature|Armature|Armature|Armature|Armature|00|Armature|00|Armature|Arm
+  - first:
+      74: -2436124601581949016
+    second: Armature|Armature|Armature|Hemi|Hemi|00|Hemi|00|Armature|Hemi|Hemi|00|He
+  - first:
+      74: 2838860915499763679
+    second: Armature|Armature|Armature|Point|Point|00|Point|00|Armature|Point|Point|
+  - first:
+      74: 8221249767186820386
+    second: LeftHandArmature|Armature|Armature|Armature|Armature|00|Armature|00|Armature|Arm
+  - first:
+      74: 3634031735989348990
+    second: RightHandArmature|Armature|Armature|Armature|Armature|00|Armature|00|Armature
   externalObjects: {}
   materials:
     materialImportMode: 2
