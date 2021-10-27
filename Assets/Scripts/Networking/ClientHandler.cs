@@ -7,9 +7,12 @@ using hololensMultiplayer.Models;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Packets;
 using LiteNetLib;
+using LiteNetLib.Utils;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 using UnityEngine;
 
@@ -58,13 +61,14 @@ public class ClientHandler : MonoBehaviour
 
     void Start()
     {
-
+        client.Start();
+        StartCoroutine(SearchServer());
+        StartCoroutine(ClientUpdate());
     }
 
     public void Connect()
     {
         var split = Address.Split(':');
-        client.Start();
         client.Connect(split[0], int.Parse(split[1]), "hololensMultiplayer");        
         Debug.Log($"Connecting to {Address}");
         StartCoroutine(ClientUpdate());
@@ -73,14 +77,13 @@ public class ClientHandler : MonoBehaviour
     public void Disconnect()
     {
         client.DisconnectAll();
-        client.Stop();
         StopAllCoroutines();
     }
 
     private IEnumerator ClientUpdate()
     {
         while (true)
-        {
+        {            
             client.PollEvents();
 
             foreach (var handlerPair in MessageProcessors)
@@ -91,10 +94,30 @@ public class ClientHandler : MonoBehaviour
 
             yield return new WaitForSeconds(UpdateTime);
         }
-
     }
+
+    private IEnumerator SearchServer()
+    {
+        client.ServerBroadcastResponseEvent += Client_ServerBroadcastResponseEvent;
+        while (!client.IsConnected)
+        {
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put("PV");
+            client.SendBroadcast(writer, 12345);
+            yield return new WaitForSeconds(UpdateTime);
+        }
+    }
+
+    private void Client_ServerBroadcastResponseEvent(System.Net.IPEndPoint serverEndpoint)
+    {
+        client.Connect(serverEndpoint, "hololensMultiplayer");
+        client.ServerBroadcastResponseEvent -= Client_ServerBroadcastResponseEvent;
+        Debug.Log($"Connecting to {serverEndpoint}");
+    }
+
     private void OnDestroy()
     {
         Disconnect();
+        client.Stop();
     }
 }

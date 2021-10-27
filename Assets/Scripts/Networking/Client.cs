@@ -18,20 +18,16 @@ namespace hololensMultiplayer
         public readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         public readonly EventBasedNetListener listener;
 
+        public delegate void ReceivedUnconnectedServerResponse(IPEndPoint serverEndpoint);
+        public event ReceivedUnconnectedServerResponse ServerBroadcastResponseEvent;
+
         public bool IsConnected { get; private set; }
 
         public Client(EventBasedNetListener listener) : base(listener)
         {
             this.listener = listener;
-        }
-
-        public new void Stop()
-        {
-            listener.PeerConnectedEvent -= PeerConnected;
-            listener.PeerDisconnectedEvent -= PeerDisconnected;
-            listener.NetworkReceiveEvent -= NetworkDataReceived;
-
-            base.Stop();
+            BroadcastReceiveEnabled = true;
+            UnconnectedMessagesEnabled = true;
         }
 
         public new void Start()
@@ -39,8 +35,19 @@ namespace hololensMultiplayer
             listener.PeerConnectedEvent += PeerConnected;
             listener.PeerDisconnectedEvent += PeerDisconnected;
             listener.NetworkReceiveEvent += NetworkDataReceived;
+            listener.NetworkReceiveUnconnectedEvent += OnNetworkReceiveUnconnected;
 
             base.Start();
+        }
+
+        public new void Stop()
+        {
+            listener.PeerConnectedEvent -= PeerConnected;
+            listener.PeerDisconnectedEvent -= PeerDisconnected;
+            listener.NetworkReceiveEvent -= NetworkDataReceived;
+            listener.NetworkReceiveUnconnectedEvent -= OnNetworkReceiveUnconnected;
+
+            base.Stop();
         }
 
         private void NetworkDataReceived(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
@@ -64,5 +71,15 @@ namespace hololensMultiplayer
         {
            FirstPeer.Send(netPacketProcessor.Write(wrapperPacket), (byte)wrapperPacket.UdpChannel, wrapperPacket.deliveryMethod);
         }
+
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
+        {
+            if (messageType == UnconnectedMessageType.BasicMessage && ConnectedPeersCount == 0 && reader.GetString() == "PV")
+            {
+                Debug.Log("[CLIENT] Received discovery response.");
+                ServerBroadcastResponseEvent?.Invoke(remoteEndPoint);
+            }
+        }
+
     }
 }

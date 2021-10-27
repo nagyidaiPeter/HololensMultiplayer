@@ -27,12 +27,15 @@ namespace hololensMultiplayer
         public Server(EventBasedNetListener listener) : base(listener)
         {
             this.listener = listener;
+            BroadcastReceiveEnabled = true;
+            UnconnectedMessagesEnabled = true;            
         }
 
         public new void Stop()
         {
             listener.PeerConnectedEvent -= PeerConnected;
             listener.NetworkReceiveEvent -= NetworkDataReceived;
+            listener.NetworkReceiveUnconnectedEvent -= OnNetworkReceiveUnconnected;
 
             base.Stop();
         }
@@ -41,6 +44,7 @@ namespace hololensMultiplayer
         {
             listener.PeerConnectedEvent += PeerConnected;
             listener.NetworkReceiveEvent += NetworkDataReceived;
+            listener.NetworkReceiveUnconnectedEvent += OnNetworkReceiveUnconnected;
 
             base.Start(port);
         }
@@ -78,6 +82,17 @@ namespace hololensMultiplayer
         public void SendTo(WrapperPacket packet, NetPeer peer)
         {
             peer.Send(netPacketProcessor.Write(packet), (byte)packet.UdpChannel, packet.deliveryMethod);
+        }
+
+        public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
+        {
+            if (messageType == UnconnectedMessageType.Broadcast && reader.GetString(2) == "PV")
+            {
+                Debug.Log("[SERVER] Received discovery request. Send discovery response");
+                NetDataWriter resp = new NetDataWriter();
+                resp.Put("PV");
+                SendUnconnectedMessage(resp, remoteEndPoint);
+            }
         }
     }
 }
