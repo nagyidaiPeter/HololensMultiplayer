@@ -23,8 +23,7 @@ public class ServerHandler : MonoBehaviour
 
     public string Address = "127.0.0.1:12345";
 
-    //In SEC
-    public float UpdateTime = 0.016666f;
+    public int UpdateRate = 30;
 
     private DataManager dataManager;
 
@@ -140,7 +139,7 @@ public class ServerHandler : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(UpdateTime);
+            yield return new WaitForSeconds(1/UpdateRate);
         }
     }
 
@@ -151,7 +150,7 @@ public class ServerHandler : MonoBehaviour
             NetDataWriter writer = new NetDataWriter();
             writer.Put("PV");
             server.SendBroadcast(writer, 12346);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

@@ -25,8 +25,7 @@ public class ClientHandler : MonoBehaviour
     public Client client;
     private DataManager dataManager;
 
-    //In MS
-    public float UpdateTime = 0.01666f;
+    public int UpdateRate = 30;
 
     public Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
 
@@ -85,7 +84,7 @@ public class ClientHandler : MonoBehaviour
                 handlerPair.Value.ProcessOutgoing();
             }
 
-            yield return new WaitForSeconds(UpdateTime);
+            yield return new WaitForSeconds(1/UpdateRate);
         }
     }
 

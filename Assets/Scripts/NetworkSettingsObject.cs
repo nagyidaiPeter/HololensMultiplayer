@@ -6,5 +6,10 @@ using UnityEngine;
 public class NetworkSettingsObject : ScriptableObject
 {
     public int ServerPort = 12345;
+
     public int ClientPort = 12346;
+
+    public int NetworkRefreshRate = 30;
+
+    public int MaxConnections = 32;
 }

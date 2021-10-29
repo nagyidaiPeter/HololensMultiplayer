@@ -22,7 +22,7 @@ namespace hololensMultiplayer
         public readonly EventBasedNetListener listener;
 
         private int ConnectedPlayers = 0;
-        public int maxConnections = 16;
+        public int maxConnections = 32;
 
         public Server(EventBasedNetListener listener) : base(listener)
         {
