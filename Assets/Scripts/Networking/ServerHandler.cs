@@ -40,6 +40,7 @@ public class ServerHandler : MonoBehaviour
         this.server = server;
         this.dataManager = dataManager;
 
+        //todo: This will get out of hand if we need more processors, rework this to collect all processors from assembly with reflection or similar solution
         MessageProcessors.Add(MessageTypes.PlayerTransform, playerTransformProc);
         MessageProcessors.Add(MessageTypes.Welcome, serverWelcomeProcessor);
         MessageProcessors.Add(MessageTypes.Disconnect, disconnectProcessor);

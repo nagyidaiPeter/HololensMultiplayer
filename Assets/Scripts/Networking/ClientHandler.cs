@@ -38,6 +38,7 @@ public class ClientHandler : MonoBehaviour
 
         this.client.netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
 
+        //todo: This will get out of hand if we need more processors, rework this to collect all processors from assembly with reflection or similar solution
         MessageProcessors.Add(MessageTypes.PlayerTransform, clientPlayTransProcessor);
         MessageProcessors.Add(MessageTypes.Welcome, clientWelcome);
         MessageProcessors.Add(MessageTypes.Disconnect, clientDisconnect);
