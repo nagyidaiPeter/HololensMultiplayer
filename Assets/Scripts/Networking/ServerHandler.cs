@@ -75,7 +75,7 @@ public class ServerHandler : MonoBehaviour
             //GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
 
             StartCoroutine(ServerUpdate());
-            StartCoroutine(BroadcastServer()); 
+            StartCoroutine(BroadcastServer());
         }
     }
 
@@ -83,6 +83,7 @@ public class ServerHandler : MonoBehaviour
     {
         StopServer();
     }
+
     public void StopServer()
     {
         Debug.Log("Stopping server..");
@@ -140,7 +141,7 @@ public class ServerHandler : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(1/UpdateRate);
+            yield return new WaitForSeconds(1 / UpdateRate);
         }
     }
 

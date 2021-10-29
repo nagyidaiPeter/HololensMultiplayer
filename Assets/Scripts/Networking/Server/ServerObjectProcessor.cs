@@ -19,11 +19,13 @@ namespace Assets.Scripts.SERVER.Processors
 
         public new Queue<ObjectTransform> OutgoingMessages { get; set; } = new Queue<ObjectTransform>();
 
-        [Inject]
+        
         private Server server;
 
-        public ServerObjectProcessor()
+        [Inject]
+        public void Init(Server server)
         {
+            this.server = server;
             server.PeerConnectedEvent += Server_PeerConnectedEvent;
         }
 

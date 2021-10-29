@@ -12,13 +12,14 @@ table TransformFB {
   RHState:HandState;
   RHPos:Vec3;
   RHRot:Quat;
+  RHPointerPos:Vec3;
 
   LHActive:bool;
   LHState:HandState;
   LHPos:Vec3;
   LHRot:Quat;
+  LHPointerPos:Vec3;
   
-  PointerPos:Vec3;
 }
 
 root_type TransformFB;

@@ -26,13 +26,14 @@ public struct TransformFB : IFlatbufferObject
   public hololensMulti.HandState? RHState { get { int o = __p.__offset(14); return o != 0 ? (hololensMulti.HandState?)(new hololensMulti.HandState()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Vec3? RHPos { get { int o = __p.__offset(16); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Quat? RHRot { get { int o = __p.__offset(18); return o != 0 ? (hololensMulti.Quat?)(new hololensMulti.Quat()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public bool LHActive { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public hololensMulti.HandState? LHState { get { int o = __p.__offset(22); return o != 0 ? (hololensMulti.HandState?)(new hololensMulti.HandState()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public hololensMulti.Vec3? LHPos { get { int o = __p.__offset(24); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public hololensMulti.Quat? LHRot { get { int o = __p.__offset(26); return o != 0 ? (hololensMulti.Quat?)(new hololensMulti.Quat()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public hololensMulti.Vec3? PointerPos { get { int o = __p.__offset(28); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public hololensMulti.Vec3? RHPointerPos { get { int o = __p.__offset(20); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public bool LHActive { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public hololensMulti.HandState? LHState { get { int o = __p.__offset(24); return o != 0 ? (hololensMulti.HandState?)(new hololensMulti.HandState()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public hololensMulti.Vec3? LHPos { get { int o = __p.__offset(26); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public hololensMulti.Quat? LHRot { get { int o = __p.__offset(28); return o != 0 ? (hololensMulti.Quat?)(new hololensMulti.Quat()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public hololensMulti.Vec3? LHPointerPos { get { int o = __p.__offset(30); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-  public static void StartTransformFB(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartTransformFB(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddPlayerID(FlatBufferBuilder builder, int PlayerID) { builder.AddInt(0, PlayerID, 0); }
   public static void AddPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> PosOffset) { builder.AddStruct(1, PosOffset.Value, 0); }
   public static void AddQrOffset(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> QrOffsetOffset) { builder.AddStruct(2, QrOffsetOffset.Value, 0); }
@@ -41,11 +42,12 @@ public struct TransformFB : IFlatbufferObject
   public static void AddRHState(FlatBufferBuilder builder, Offset<hololensMulti.HandState> RHStateOffset) { builder.AddStruct(5, RHStateOffset.Value, 0); }
   public static void AddRHPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> RHPosOffset) { builder.AddStruct(6, RHPosOffset.Value, 0); }
   public static void AddRHRot(FlatBufferBuilder builder, Offset<hololensMulti.Quat> RHRotOffset) { builder.AddStruct(7, RHRotOffset.Value, 0); }
-  public static void AddLHActive(FlatBufferBuilder builder, bool LHActive) { builder.AddBool(8, LHActive, false); }
-  public static void AddLHState(FlatBufferBuilder builder, Offset<hololensMulti.HandState> LHStateOffset) { builder.AddStruct(9, LHStateOffset.Value, 0); }
-  public static void AddLHPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> LHPosOffset) { builder.AddStruct(10, LHPosOffset.Value, 0); }
-  public static void AddLHRot(FlatBufferBuilder builder, Offset<hololensMulti.Quat> LHRotOffset) { builder.AddStruct(11, LHRotOffset.Value, 0); }
-  public static void AddPointerPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> PointerPosOffset) { builder.AddStruct(12, PointerPosOffset.Value, 0); }
+  public static void AddRHPointerPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> RHPointerPosOffset) { builder.AddStruct(8, RHPointerPosOffset.Value, 0); }
+  public static void AddLHActive(FlatBufferBuilder builder, bool LHActive) { builder.AddBool(9, LHActive, false); }
+  public static void AddLHState(FlatBufferBuilder builder, Offset<hololensMulti.HandState> LHStateOffset) { builder.AddStruct(10, LHStateOffset.Value, 0); }
+  public static void AddLHPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> LHPosOffset) { builder.AddStruct(11, LHPosOffset.Value, 0); }
+  public static void AddLHRot(FlatBufferBuilder builder, Offset<hololensMulti.Quat> LHRotOffset) { builder.AddStruct(12, LHRotOffset.Value, 0); }
+  public static void AddLHPointerPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> LHPointerPosOffset) { builder.AddStruct(13, LHPointerPosOffset.Value, 0); }
   public static Offset<hololensMulti.TransformFB> EndTransformFB(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<hololensMulti.TransformFB>(o);

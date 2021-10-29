@@ -1,6 +1,6 @@
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Utilities;
-
+using System.Linq;
 using UnityEngine;
 
 public struct FingersState
@@ -27,7 +27,9 @@ public class HandTracker : MonoBehaviour
     public TrackedHandJoint trackedJoint;
     public bool IsTracked = false;
 
+    public Vector3 pointerPos;
     public FingersState handState;
+
 
     void Update()
     {
@@ -35,6 +37,16 @@ public class HandTracker : MonoBehaviour
         IsTracked = HandJointUtils.TryGetJointPose(trackedJoint, handedness, out pose);
         if (IsTracked)
         {
+            var pointer = HandJointUtils.FindHand(handedness).InputSource.Pointers.FirstOrDefault(x => x.IsActive && x is ShellHandRayPointer);
+            if (pointer is ShellHandRayPointer handPointer && handPointer.Result != null)
+            {
+                pointerPos = handPointer.Result.Details.Point;
+            }
+            else
+            {
+                pointerPos = Vector3.zero;
+            }
+
             transform.position = pose.Position;
             transform.rotation = pose.Rotation;
 

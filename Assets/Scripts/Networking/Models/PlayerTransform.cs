@@ -19,11 +19,13 @@ namespace hololensMultiModels
         public FingersState RHFingers { get; set; }
         public Vector3 RHPos { get; set; } = Vector3.zero;
         public Quaternion RHRot { get; set; } = Quaternion.identity;
+        public Vector3 RHPointerPos { get; set; } = Vector3.zero;
 
         public bool LHActive { get; set; }
         public FingersState LHFingers { get; set; }
         public Vector3 LHPos { get; set; } = Vector3.zero;
         public Quaternion LHRot { get; set; } = Quaternion.identity;
+        public Vector3 LHPointerPos { get; set; } = Vector3.zero;
 
         public new MessageTypes MsgType = MessageTypes.PlayerTransform;
 
@@ -52,11 +54,13 @@ namespace hololensMultiModels
             TransformFB.AddRHState(builder, HandState.CreateHandState(builder, RHFingers.Pinky, RHFingers.Ring, RHFingers.Middle, RHFingers.Index, RHFingers.Thumb));
             TransformFB.AddRHPos(builder, RHPos.ToVec3(builder));
             TransformFB.AddRHRot(builder, RHRot.ToQuat(builder));
+            TransformFB.AddRHPointerPos(builder, RHPointerPos.ToVec3(builder));
 
             TransformFB.AddLHActive(builder, LHActive);
             TransformFB.AddLHState(builder, HandState.CreateHandState(builder, LHFingers.Pinky, LHFingers.Ring, LHFingers.Middle, LHFingers.Index, LHFingers.Thumb));
             TransformFB.AddLHPos(builder, LHPos.ToVec3(builder));
             TransformFB.AddLHRot(builder, LHRot.ToQuat(builder));
+            TransformFB.AddLHPointerPos(builder, LHPointerPos.ToVec3(builder));
 
             var offset = TransformFB.EndTransformFB(builder);
             TransformFB.FinishTransformFBBuffer(builder, offset);
@@ -91,6 +95,9 @@ namespace hololensMultiModels
             if (transformFB.RHRot.HasValue)
                 RHRot = transformFB.RHRot.ToQuaternion();
 
+            if (transformFB.RHPointerPos.HasValue)
+                RHPointerPos = transformFB.RHPointerPos.ToVector3();
+
             if (transformFB.LHState.HasValue)
                 LHFingers = new FingersState(transformFB.LHState.Value.Pinky, transformFB.LHState.Value.Ring, transformFB.LHState.Value.Middle, transformFB.LHState.Value.Index, transformFB.LHState.Value.Thumb);
 
@@ -99,6 +106,9 @@ namespace hololensMultiModels
 
             if (transformFB.LHRot.HasValue)
                 LHRot = transformFB.LHRot.ToQuaternion();
+
+            if (transformFB.LHPointerPos.HasValue)
+                LHPointerPos = transformFB.LHPointerPos.ToVector3();
         }
     }
 
