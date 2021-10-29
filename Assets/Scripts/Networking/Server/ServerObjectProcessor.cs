@@ -54,9 +54,11 @@ namespace Assets.Scripts.SERVER.Processors
                 var postMsg = OutgoingMessages.Dequeue();
             }
 
-            for (int j = 0; j < dataManager.Objects.Count; j++)
+            var changedObjs = dataManager.Objects.Where(x => x.Value.IsPositionChanged()).Select(x => x.Value);
+            for (int j = 0; j < changedObjs.Count(); j++)
             {
-                var objectToSync = dataManager.Objects.ElementAt(j).Value;
+                var objectToSync = changedObjs.ElementAt(j);
+                objectToSync.LastSentPos = objectToSync.objectTransform.Pos;
                 server.SendToAll(objectToSync.objectTransform.Serialize());
             }
         }
