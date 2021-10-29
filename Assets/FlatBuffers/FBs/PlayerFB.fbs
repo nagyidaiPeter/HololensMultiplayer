@@ -17,6 +17,8 @@ table TransformFB {
   LHState:HandState;
   LHPos:Vec3;
   LHRot:Quat;
+  
+  PointerPos:Vec3;
 }
 
 root_type TransformFB;

@@ -9,8 +9,8 @@ using Zenject;
 
 public class NetworkPlayer : MonoBehaviour
 {
-    public float InterVel = 35;
-    public float HandInterVel = 35;
+    public float InterVel = 20;
+    public float HandInterVel = 20;
     public PlayerData playerData = null;
 
     public Transform RH, LH;
@@ -58,7 +58,7 @@ public class NetworkPlayer : MonoBehaviour
     private void Curl(Transform parent, float curlage)
     {
         if (parent.GetComponent<FingerData>() is FingerData fingerData)
-            parent.localEulerAngles = new Vector3(curlage, 0, 0);
+            parent.localEulerAngles = new Vector3(curlage * byte.MaxValue, 0, 0);
 
         foreach (Transform child in parent)
         {

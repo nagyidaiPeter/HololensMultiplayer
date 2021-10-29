@@ -5,13 +5,13 @@ using UnityEngine;
 
 public struct FingersState
 {
-    public float Pinky;
-    public float Ring;
-    public float Middle;
-    public float Index;
-    public float Thumb;
+    public byte Pinky;
+    public byte Ring;
+    public byte Middle;
+    public byte Index;
+    public byte Thumb;
 
-    public FingersState(float pinky, float ring, float middle, float index, float thumb)
+    public FingersState(byte pinky, byte ring, byte middle, byte index, byte thumb)
     {
         Pinky = pinky;
         Ring = ring;
@@ -38,11 +38,11 @@ public class HandTracker : MonoBehaviour
             transform.position = pose.Position;
             transform.rotation = pose.Rotation;
 
-            handState.Pinky = HandPoseUtils.PinkyFingerCurl(handedness) * 90;
-            handState.Ring = HandPoseUtils.RingFingerCurl(handedness) * 90;
-            handState.Middle = HandPoseUtils.MiddleFingerCurl(handedness) * 90;
-            handState.Index = HandPoseUtils.IndexFingerCurl(handedness) * 90;
-            handState.Thumb = HandPoseUtils.ThumbFingerCurl(handedness) * 90;
+            handState.Pinky = (byte)(byte.MaxValue / HandPoseUtils.PinkyFingerCurl(handedness) * 90);
+            handState.Ring = (byte)(byte.MaxValue / HandPoseUtils.RingFingerCurl(handedness) * 90);
+            handState.Middle = (byte)(byte.MaxValue / HandPoseUtils.MiddleFingerCurl(handedness) * 90);
+            handState.Index = (byte)(byte.MaxValue / HandPoseUtils.IndexFingerCurl(handedness) * 90);
+            handState.Thumb = (byte)(byte.MaxValue / HandPoseUtils.ThumbFingerCurl(handedness) * 90);
         }
 
         foreach (Transform child in transform)

@@ -14,9 +14,9 @@ struct Quat {
 }
 
 struct HandState {
-  Pinky:float;
-  Ring:float;
-  Middle:float;
-  Index:float;
-  Thumb:float;
+  Pinky:ubyte;
+  Ring:ubyte;
+  Middle:ubyte;
+  Index:ubyte;
+  Thumb:ubyte;
 }
