@@ -69,7 +69,7 @@ public class NetworkPlayer : MonoBehaviour
     void Update()
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.playerTransform.Pos, InterVel * Time.deltaTime);
-        transform.localRotation = Quaternion.Lerp(transform.localRotation, playerData.playerTransform.Rot, InterVel * Time.deltaTime);
+        transform.localRotation = playerData.playerTransform.Rot;
         transform.localEulerAngles -= playerData.playerTransform.QrRotationOffset;
 
         if (RH != null)
