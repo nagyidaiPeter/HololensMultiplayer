@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OwnerID: -1
-  InterVel: 35
+  InterVel: 25
   qrPos: {fileID: 0}
   RefreshRate: 30
 --- !u!1001 &4115012808094425459
