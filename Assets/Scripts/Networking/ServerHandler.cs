@@ -5,8 +5,12 @@ using hololensMultiplayer.Models;
 using hololensMultiplayer.Networking;
 using hololensMultiplayer.Packets;
 using LiteNetLib;
+using LiteNetLib.Utils;
+
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEngine;
 
 using Zenject;
@@ -15,7 +19,7 @@ public class ServerHandler : MonoBehaviour
 {
     private Server server;
 
-    public bool RunningServer = false;
+    public bool IsServerRunning = false;
 
     public string Address = "127.0.0.1:12345";
 
@@ -26,6 +30,8 @@ public class ServerHandler : MonoBehaviour
 
     private Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
 
+    [Inject]
+    private NetworkObject.ObjectFactory objectFactory;
 
     [Inject]
     public void Init(Server server, DataManager dataManager,
@@ -50,23 +56,27 @@ public class ServerHandler : MonoBehaviour
 
     public void StartServer()
     {
-        Debug.Log("Starting server..");
-        server.listener.PeerDisconnectedEvent += PeerDisconnected;
-        server.listener.ConnectionRequestEvent += OnConnectionRequest;
-
-        var split = Address.Split(':');
-        server.Start(int.Parse(split[1]));        
-        RunningServer = true;
-        dataManager.IsServer = true;
-
-        foreach (var obj in Resources.LoadAll("Objects"))
+        if (!server.IsRunning)
         {
-            GetComponent<ObjectSpawner>().SpawnObject(obj.name);
+            Debug.Log("Starting server..");
+            server.listener.PeerDisconnectedEvent += PeerDisconnected;
+            server.listener.ConnectionRequestEvent += OnConnectionRequest;
+
+            var split = Address.Split(':');
+            server.Start(int.Parse(split[1]));
+            IsServerRunning = true;
+            dataManager.IsServer = true;
+
+            foreach (var obj in Resources.LoadAll("Objects"))
+            {
+                GetComponent<ObjectSpawner>().SpawnObject(obj.name);
+            }
+
+            //GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
+
+            StartCoroutine(ServerUpdate());
+            StartCoroutine(BroadcastServer()); 
         }
-
-        //GetComponent<ObjectSpawner>().SpawnObject("HumanHeart");
-
-        StartCoroutine(ServerUpdate());       
     }
 
     private void OnDestroy()
@@ -76,13 +86,20 @@ public class ServerHandler : MonoBehaviour
     public void StopServer()
     {
         Debug.Log("Stopping server..");
-        RunningServer = false;
+        IsServerRunning = false;
         dataManager.IsServer = false;
         StopAllCoroutines();
         server.Stop();
 
         server.listener.PeerDisconnectedEvent -= PeerDisconnected;
         server.listener.ConnectionRequestEvent -= OnConnectionRequest;
+
+        for (int i = 0; i < dataManager.Objects.Count; i++)
+        {
+            var first = dataManager.Objects.ElementAt(i);
+            objectFactory.AddToPool(first.Value.gameObject.GetComponent<NetworkObject>());
+        }
+        dataManager.Objects.Clear();
     }
 
     private void OnConnectionRequest(ConnectionRequest request)
@@ -107,7 +124,7 @@ public class ServerHandler : MonoBehaviour
 
     private IEnumerator ServerUpdate()
     {
-        while (RunningServer)
+        while (IsServerRunning)
         {
             server.PollEvents();
             foreach (var processor in MessageProcessors)
@@ -123,9 +140,18 @@ public class ServerHandler : MonoBehaviour
                 }
             }
 
-
             yield return new WaitForSeconds(UpdateTime);
         }
     }
 
+    private IEnumerator BroadcastServer()
+    {
+        while (server.IsRunning)
+        {
+            NetDataWriter writer = new NetDataWriter();
+            writer.Put("PV");
+            server.SendBroadcast(writer, 12346);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
 }

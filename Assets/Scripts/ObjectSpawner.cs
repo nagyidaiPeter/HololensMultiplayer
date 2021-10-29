@@ -23,7 +23,6 @@ public class ObjectSpawner : MonoBehaviour
         var networkObject = objectFactory.Create(Resources.Load($"Objects/{name}"));
         var newPlayerGO = networkObject.gameObject;
         newPlayerGO.SetActive(true);
-        newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
         dataManager.Objects.Add(networkObject.objectData.objectTransform.ObjectID, networkObject.objectData);
     }
 }

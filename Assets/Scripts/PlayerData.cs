@@ -11,6 +11,8 @@ namespace hololensMultiplayer
         public NetPeer connection;
         public string Name = "Player";
 
+        public bool IsWelcomed = false;
+
         public PlayerTransform playerTransform = new PlayerTransform();
 
         public GameObject playerObject;

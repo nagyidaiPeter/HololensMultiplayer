@@ -68,6 +68,7 @@ namespace Assets.Scripts.SERVER.Processors
                         newPlayerGO.SetActive(true);
                         newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
                         newPlayer.playerObject = newPlayerGO;
+                        newPlayer.playerTransform = transformMsg;
                         networkPlayer.playerData = newPlayer;
                         dataManager.Players.Add(newPlayer.ID, newPlayer);
                     }
@@ -80,6 +81,7 @@ namespace Assets.Scripts.SERVER.Processors
                         newPlayerGO.SetActive(true);
                         newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
                         newPlayer.playerObject = newPlayerGO;
+                        newPlayer.playerTransform = transformMsg;
                         networkPlayer.playerData = newPlayer;
                         dataManager.Players[newPlayer.ID] = newPlayer;
                     }

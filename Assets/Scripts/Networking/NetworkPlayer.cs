@@ -1,6 +1,8 @@
 ﻿
 using hololensMultiplayer;
 
+using System.Collections;
+
 using UnityEngine;
 
 using Zenject;
@@ -28,10 +30,21 @@ public class NetworkPlayer : MonoBehaviour
     public Transform LThumb;
 
     [Inject]
-    DataManager dataManager;
+    private DataManager dataManager;
 
     void Start()
     {
+        StartCoroutine(DisableLocalPlayer());
+    }
+
+    private IEnumerator DisableLocalPlayer()
+    {
+        Debug.Log($"Local player is null: {dataManager.LocalPlayer == null}");
+        while (dataManager.LocalPlayer == null)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+        Debug.Log($"Got local player: {dataManager.LocalPlayer != null}");
         if (dataManager.LocalPlayer.ID == playerData.ID)
         {
             dataManager.Players[playerData.ID].playerObject.GetComponent<MeshRenderer>().enabled = false;
@@ -56,7 +69,7 @@ public class NetworkPlayer : MonoBehaviour
     void Update()
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, playerData.playerTransform.Pos, InterVel * Time.deltaTime);
-        transform.localRotation = playerData.playerTransform.Rot;
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, playerData.playerTransform.Rot, InterVel * Time.deltaTime);
         transform.localEulerAngles -= playerData.playerTransform.QrRotationOffset;
 
         if (RH != null)

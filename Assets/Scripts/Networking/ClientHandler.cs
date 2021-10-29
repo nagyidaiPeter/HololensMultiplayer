@@ -22,9 +22,7 @@ public class ClientHandler : MonoBehaviour
 {
     public bool ClientIsServer = false;
 
-    public string Address = "127.0.0.1:12345";
-
-    private Client client;
+    public Client client;
     private DataManager dataManager;
 
     //In MS
@@ -54,23 +52,18 @@ public class ClientHandler : MonoBehaviour
 
     public bool IsConnected { get { return client.IsConnected; } }
 
-    public void SetAddress(string address)
-    {
-        Address = address;
-    }
-
     void Start()
     {
         client.Start();
-        StartCoroutine(SearchServer());
+        client.ServerBroadcastResponseEvent += Client_ServerBroadcastResponseEvent;
         StartCoroutine(ClientUpdate());
     }
 
-    public void Connect()
+    public void Connect(string address)
     {
-        var split = Address.Split(':');
+        var split = address.Split(':');
         client.Connect(split[0], int.Parse(split[1]), "hololensMultiplayer");        
-        Debug.Log($"Connecting to {Address}");
+        Debug.Log($"Connecting to {address}");
         StartCoroutine(ClientUpdate());
     }
 
@@ -96,17 +89,6 @@ public class ClientHandler : MonoBehaviour
         }
     }
 
-    private IEnumerator SearchServer()
-    {
-        client.ServerBroadcastResponseEvent += Client_ServerBroadcastResponseEvent;
-        while (!client.IsConnected)
-        {
-            NetDataWriter writer = new NetDataWriter();
-            writer.Put("PV");
-            client.SendBroadcast(writer, 12345);
-            yield return new WaitForSeconds(UpdateTime);
-        }
-    }
 
     private void Client_ServerBroadcastResponseEvent(System.Net.IPEndPoint serverEndpoint)
     {

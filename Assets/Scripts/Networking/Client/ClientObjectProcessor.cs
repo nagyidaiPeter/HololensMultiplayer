@@ -61,8 +61,8 @@ namespace Assets.Scripts.SERVER.Processors
                     var networkObject = objectFactory.Create(Resources.Load($"Objects/{objectTransformMsg.ObjectType}"));
                     var newPlayerGO = networkObject.gameObject;
                     newPlayerGO.SetActive(true);
-                    newPlayerGO.transform.parent = GameObject.Find("NetworkSpace").transform;
                     newObject.gameObject = newPlayerGO;
+                    newObject.objectTransform = objectTransformMsg;
                     networkObject.objectData = newObject;
                     dataManager.Objects.Add(objectTransformMsg.ObjectID, newObject);
                 }

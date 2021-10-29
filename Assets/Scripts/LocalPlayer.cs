@@ -35,6 +35,7 @@ public class LocalPlayer : MonoBehaviour
             dataManager.LocalPlayer.playerTransform.QrRotationOffset = qrPos.parent.eulerAngles;
 
             if (RH != null)
+            
             {
                 dataManager.LocalPlayer.playerTransform.RHFingers = RH.GetComponent<HandTracker>().handState;
                 dataManager.LocalPlayer.playerTransform.RHPos = transform.InverseTransformPoint(RH.position);

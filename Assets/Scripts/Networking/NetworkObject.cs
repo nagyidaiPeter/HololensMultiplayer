@@ -18,6 +18,7 @@ public class NetworkObject : MonoBehaviour
     public ObjectData objectData = null;
     public Transform qrPos;
     public int RefreshRate = 30;
+
     [Inject]
     private DataManager dataManager;
 
@@ -148,9 +149,11 @@ public class NetworkObject : MonoBehaviour
                 else
                 {
                     instance = _container.InstantiatePrefabForComponent<NetworkObject>(prefab, new Vector3(0, 0, 0), new Quaternion(), null);
+                    instance.transform.parent = GameObject.Find("NetworkSpace").transform;
+
                 }
                 instance.objectData = new ObjectData();
-                instance.objectData.gameObject = gameObject;
+                instance.objectData.gameObject = instance.gameObject;
                 instance.objectData.objectTransform = new ObjectTransform();
                 instance.objectData.objectTransform.ObjectType = prefab.name;
                 instance.objectData.objectTransform.ObjectID = ID;
