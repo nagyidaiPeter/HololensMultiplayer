@@ -34,7 +34,9 @@ namespace Assets.Scripts.SERVER.Processors
             {
                 var objectToSync = changedObjs.ElementAt(j);
                 objectToSync.LastSentPos = objectToSync.objectTransform.Pos;
-                server.SendTo(objectToSync.objectTransform.Serialize(), newPeer);
+                var wrapperPacket = objectToSync.objectTransform.Serialize();
+                wrapperPacket.deliveryMethod = DeliveryMethod.ReliableUnordered;
+                server.SendTo(wrapperPacket, newPeer);
             }
         }
 
