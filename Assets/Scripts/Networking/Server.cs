@@ -24,6 +24,9 @@ namespace hololensMultiplayer
         private int ConnectedPlayers = 0;
         public int maxConnections = 32;
 
+        public delegate void NewPeerConnection(NetPeer newPeer);
+        public event NewPeerConnection PeerConnectedEvent;
+
         public Server(EventBasedNetListener listener) : base(listener)
         {
             this.listener = listener;
@@ -64,6 +67,8 @@ namespace hololensMultiplayer
             var msgBody = welcomeMsg.Serialize();
 
             peer.Send(netPacketProcessor.Write(msgBody), DeliveryMethod.ReliableOrdered);
+
+            PeerConnectedEvent?.Invoke(peer);
         }
 
         private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)

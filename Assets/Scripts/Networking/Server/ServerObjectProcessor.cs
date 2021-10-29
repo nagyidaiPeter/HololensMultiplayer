@@ -22,6 +22,22 @@ namespace Assets.Scripts.SERVER.Processors
         [Inject]
         private Server server;
 
+        public ServerObjectProcessor()
+        {
+            server.PeerConnectedEvent += Server_PeerConnectedEvent;
+        }
+
+        private void Server_PeerConnectedEvent(NetPeer newPeer)
+        {
+            var changedObjs = dataManager.Objects.Select(x => x.Value);
+            for (int j = 0; j < changedObjs.Count(); j++)
+            {
+                var objectToSync = changedObjs.ElementAt(j);
+                objectToSync.LastSentPos = objectToSync.objectTransform.Pos;
+                server.SendTo(objectToSync.objectTransform.Serialize(), newPeer);
+            }
+        }
+
         public override bool AddOutMessage(BaseMessageType objectToSend)
         {
             throw new NotImplementedException();
