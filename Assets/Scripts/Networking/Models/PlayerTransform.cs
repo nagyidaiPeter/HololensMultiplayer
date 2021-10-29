@@ -4,6 +4,7 @@ using FlatBuffers;
 using hololensMulti;
 using hololensMultiplayer.Models;
 using hololensMultiplayer.Packets;
+using LiteNetLib;
 using UnityEngine;
 
 namespace hololensMultiModels
@@ -60,7 +61,7 @@ namespace hololensMultiModels
             var offset = TransformFB.EndTransformFB(builder);
             TransformFB.FinishTransformFBBuffer(builder, offset);
 
-            return new WrapperPacket(MsgType, builder.SizedByteArray());
+            return new WrapperPacket(MsgType, builder.SizedByteArray(), DeliveryMethod.Unreliable);
         }
 
         public override void Deserialize(byte[] data)

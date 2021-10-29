@@ -30,10 +30,11 @@ namespace hololensMultiplayer.Packets
             this.messageType = messageType;
         }
 
-        public WrapperPacket(MessageTypes messageType, byte[] packetData)
+        public WrapperPacket(MessageTypes messageType, byte[] packetData, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableOrdered)
         {
             this.messageType = messageType;
             this.packetData = packetData;
+            this.deliveryMethod = deliveryMethod;
         }
     }
 }
