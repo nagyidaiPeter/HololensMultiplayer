@@ -2,7 +2,7 @@
 
 namespace hololensMulti;
 
-table TransformFB {
+table TransformFB{
   PlayerID:int;
   Pos:Vec3;
   QrOffset:Vec3;
@@ -18,8 +18,7 @@ table TransformFB {
   LHState:HandState;
   LHPos:Vec3;
   LHRot:Quat;
-  LHPointerPos:Vec3;
-  
+  LHPointerPos:Vec3;  
 }
 
 root_type TransformFB;

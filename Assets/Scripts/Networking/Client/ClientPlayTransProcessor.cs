@@ -26,8 +26,11 @@ namespace Assets.Scripts.SERVER.Processors
 
         public override bool AddInMessage(byte[] message, NetPeer player)
         {
-            PlayerTransform playerTransform = new PlayerTransform(message);
-            IncomingMessages.Enqueue(playerTransform);
+            var transformList = PlayerTransform.DeserializeStack(message);
+            foreach (var playerTransform in transformList)
+            {
+                IncomingMessages.Enqueue(playerTransform);
+            }
             return true;
         }
 

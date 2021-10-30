@@ -5,6 +5,7 @@ using hololensMulti;
 using hololensMultiplayer.Models;
 using hololensMultiplayer.Packets;
 using LiteNetLib;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace hololensMultiModels
@@ -68,11 +69,100 @@ namespace hololensMultiModels
             return new WrapperPacket(MsgType, builder.SizedByteArray(), DeliveryMethod.Unreliable);
         }
 
+        public static List<PlayerTransform> DeserializeStack(byte[] data)
+        {
+            List<PlayerTransform> playerTransforms = new List<PlayerTransform>();
+
+            ByteBuffer bb = new ByteBuffer(data);
+            PlayerTransformStack transformStack = PlayerTransformStack.GetRootAsPlayerTransformStack(bb);
+
+            for (int i = 0; i < transformStack.PlayerTransformsLength; i++)
+            {
+                var transformData = transformStack.PlayerTransforms(i);
+                if (transformData is TransformFB transformFB)
+                {
+                    PlayerTransform playerTransform = new PlayerTransform();
+                    playerTransform.Deserialize(transformFB);
+                    playerTransforms.Add(playerTransform);
+                }
+            }
+
+            return playerTransforms;
+        }
+
+        public static List<WrapperPacket> Serialize(List<PlayerTransform> transforms)
+        {
+            List<WrapperPacket> PlayerStacks = new List<WrapperPacket>();
+            var builder = new FlatBufferBuilder(1);
+
+            int counter = 0;
+            int allCounter = 0;
+            int MaxStackSize = 10;
+            List<Offset<TransformFB>> playerStack = new List<Offset<TransformFB>>();
+
+            foreach (var playerTransform in transforms)
+            {
+                TransformFB.StartTransformFB(builder);
+
+                TransformFB.AddPlayerID(builder, playerTransform.SenderID);
+
+                TransformFB.AddPos(builder, playerTransform.Pos.ToVec3(builder));
+                TransformFB.AddRot(builder, playerTransform.Rot.ToQuat(builder));
+                TransformFB.AddQrOffset(builder, playerTransform.QrRotationOffset.ToVec3(builder));
+
+                TransformFB.AddRHActive(builder, playerTransform.RHActive);
+                TransformFB.AddRHState(builder, HandState.CreateHandState(builder, playerTransform.RHFingers.Pinky, playerTransform.RHFingers.Ring, playerTransform.RHFingers.Middle, playerTransform.RHFingers.Index, playerTransform.RHFingers.Thumb));
+                TransformFB.AddRHPos(builder, playerTransform.RHPos.ToVec3(builder));
+                TransformFB.AddRHRot(builder, playerTransform.RHRot.ToQuat(builder));
+                TransformFB.AddRHPointerPos(builder, playerTransform.RHPointerPos.ToVec3(builder));
+
+                TransformFB.AddLHActive(builder, playerTransform.LHActive);
+                TransformFB.AddLHState(builder, HandState.CreateHandState(builder, playerTransform.LHFingers.Pinky, playerTransform.LHFingers.Ring, playerTransform.LHFingers.Middle, playerTransform.LHFingers.Index, playerTransform.LHFingers.Thumb));
+                TransformFB.AddLHPos(builder, playerTransform.LHPos.ToVec3(builder));
+                TransformFB.AddLHRot(builder, playerTransform.LHRot.ToQuat(builder));
+                TransformFB.AddLHPointerPos(builder, playerTransform.LHPointerPos.ToVec3(builder));
+
+                playerStack.Add(TransformFB.EndTransformFB(builder));
+
+                counter++;
+                allCounter++;
+
+                if (counter >= MaxStackSize || allCounter == transforms.Count)
+                {
+                    counter = 0;
+
+                    var vectorOffset = PlayerTransformStack.CreatePlayerTransformsVector(builder, playerStack.ToArray());
+
+                    PlayerTransformStack.StartPlayerTransformStack(builder);
+                    PlayerTransformStack.AddPlayerTransforms(builder, vectorOffset);
+
+                    var offset = PlayerTransformStack.EndPlayerTransformStack(builder);
+
+                    PlayerTransformStack.FinishPlayerTransformStackBuffer(builder, offset);
+
+                    WrapperPacket packet = new WrapperPacket(playerTransform.MsgType, builder.SizedByteArray(), DeliveryMethod.Unreliable);
+                    PlayerStacks.Add(packet);
+
+                    playerStack = new List<Offset<TransformFB>>();
+
+                    //Maybe unnecessary, TODO: check if it works without this
+                    builder = new FlatBufferBuilder(1);
+                }
+            }
+
+            return PlayerStacks;
+        }
+
         public override void Deserialize(byte[] data)
         {
             ByteBuffer bb = new ByteBuffer(data);
             TransformFB transformFB = TransformFB.GetRootAsTransformFB(bb);
 
+            Deserialize(transformFB);
+        }
+
+        public void Deserialize(TransformFB transformFB)
+        {
             SenderID = transformFB.PlayerID;
             RHActive = transformFB.RHActive;
             LHActive = transformFB.LHActive;

@@ -11,6 +11,7 @@ using hololensMultiplayer.Models;
 using hololensMulti;
 using hololensMultiModels;
 using LiteNetLib;
+using hololensMultiplayer.Packets;
 
 namespace Assets.Scripts.SERVER.Processors
 {
@@ -55,10 +56,11 @@ namespace Assets.Scripts.SERVER.Processors
                 var postMsg = OutgoingMessages.Dequeue();
             }
 
-            for (int j = 0; j < dataManager.Players.Count; j++)
-            {
-                var otherPlayer = dataManager.Players.ElementAt(j).Value;
-                server.SendToAll(otherPlayer.playerTransform.Serialize());
+            var playerTransforms = dataManager.Players.Values.Select(x => x.playerTransform).ToList();
+            var transformPackets = PlayerTransform.Serialize(playerTransforms);
+            foreach(WrapperPacket packet in transformPackets)
+            {                
+                server.SendToAll(packet);
             }
         }
 
