@@ -18,7 +18,7 @@ public struct WelcomeFB : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public WelcomeFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public string PlayerName { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPlayerNameBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -28,7 +28,7 @@ public struct WelcomeFB : IFlatbufferObject
   public byte[] GetPlayerNameArray() { return __p.__vector_as_array<byte>(6); }
 
   public static Offset<hololensMulti.WelcomeFB> CreateWelcomeFB(FlatBufferBuilder builder,
-      int PlayerID = 0,
+      byte PlayerID = 0,
       StringOffset PlayerNameOffset = default(StringOffset)) {
     builder.StartTable(2);
     WelcomeFB.AddPlayerName(builder, PlayerNameOffset);
@@ -37,7 +37,7 @@ public struct WelcomeFB : IFlatbufferObject
   }
 
   public static void StartWelcomeFB(FlatBufferBuilder builder) { builder.StartTable(2); }
-  public static void AddPlayerID(FlatBufferBuilder builder, int PlayerID) { builder.AddInt(0, PlayerID, 0); }
+  public static void AddPlayerID(FlatBufferBuilder builder, byte PlayerID) { builder.AddByte(0, PlayerID, 0); }
   public static void AddPlayerName(FlatBufferBuilder builder, StringOffset PlayerNameOffset) { builder.AddOffset(1, PlayerNameOffset.Value, 0); }
   public static Offset<hololensMulti.WelcomeFB> EndWelcomeFB(FlatBufferBuilder builder) {
     int o = builder.EndTable();

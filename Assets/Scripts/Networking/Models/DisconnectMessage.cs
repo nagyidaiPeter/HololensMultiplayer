@@ -6,7 +6,7 @@ namespace hololensMultiplayer.Models
 {
     public class DisconnectMessage : BaseMessageType
     {
-        public int DisconnectedUserID { get; set; }
+        public byte DisconnectedUserID { get; set; }
 
         public new MessageTypes MsgType = MessageTypes.Disconnect;
 

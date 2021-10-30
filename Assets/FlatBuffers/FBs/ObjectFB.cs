@@ -26,7 +26,7 @@ public struct ObjectFB : IFlatbufferObject
   public ArraySegment<byte>? GetObjectTypeBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetObjectTypeArray() { return __p.__vector_as_array<byte>(6); }
-  public int OwnerID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte OwnerID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public hololensMulti.Vec3? Pos { get { int o = __p.__offset(10); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Quat? Rot { get { int o = __p.__offset(12); return o != 0 ? (hololensMulti.Quat?)(new hololensMulti.Quat()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Vec3? Scale { get { int o = __p.__offset(14); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
@@ -34,7 +34,7 @@ public struct ObjectFB : IFlatbufferObject
   public static void StartObjectFB(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddObjectID(FlatBufferBuilder builder, int ObjectID) { builder.AddInt(0, ObjectID, 0); }
   public static void AddObjectType(FlatBufferBuilder builder, StringOffset ObjectTypeOffset) { builder.AddOffset(1, ObjectTypeOffset.Value, 0); }
-  public static void AddOwnerID(FlatBufferBuilder builder, int OwnerID) { builder.AddInt(2, OwnerID, 0); }
+  public static void AddOwnerID(FlatBufferBuilder builder, byte OwnerID) { builder.AddByte(2, OwnerID, 0); }
   public static void AddPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> PosOffset) { builder.AddStruct(3, PosOffset.Value, 0); }
   public static void AddRot(FlatBufferBuilder builder, Offset<hololensMulti.Quat> RotOffset) { builder.AddStruct(4, RotOffset.Value, 0); }
   public static void AddScale(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> ScaleOffset) { builder.AddStruct(5, ScaleOffset.Value, 0); }

@@ -6,7 +6,7 @@ namespace hololensMultiplayer
     {
         public Dictionary<int, PlayerData> Players = new Dictionary<int, PlayerData>();
         public Dictionary<int, ObjectData> Objects = new Dictionary<int, ObjectData>();
-        public int LocalPlayerID;
+        public byte LocalPlayerID;
 
         public PlayerData LocalPlayer
         {

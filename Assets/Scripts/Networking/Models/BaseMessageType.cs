@@ -14,7 +14,7 @@ namespace hololensMultiplayer.Models
     {
         public MessageTypes MsgType { get; set; }
 
-        public int SenderID { get; set; }
+        public byte SenderID { get; set; }
 
         public abstract WrapperPacket Serialize();
 

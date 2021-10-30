@@ -119,7 +119,7 @@ public class ServerHandler : MonoBehaviour
     private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
         DisconnectMessage disconnectMessage = new DisconnectMessage();
-        disconnectMessage.DisconnectedUserID = peer.Id;
+        disconnectMessage.DisconnectedUserID = dataManager.Players.FirstOrDefault(x => x.Value.connection == peer).Value.ID;
         MessageProcessors[MessageTypes.Disconnect].AddOutMessage(disconnectMessage);
     }
 

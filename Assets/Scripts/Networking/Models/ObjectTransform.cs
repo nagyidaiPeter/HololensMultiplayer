@@ -11,7 +11,7 @@ namespace hololensMultiplayer.Models
     {
         public int ObjectID { get; set; }
         public string ObjectType { get; set; } = "PrefabName";
-        public int OwnerID { get; set; } = -1;
+        public byte OwnerID { get; set; } = 0;
         public Vector3 Pos { get; set; } = Vector3.zero;
         public Quaternion Rot { get; set; } = Quaternion.identity;
         public Vector3 Scale { get; set; } = Vector3.one;

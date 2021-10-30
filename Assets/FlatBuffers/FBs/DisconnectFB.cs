@@ -18,17 +18,17 @@ public struct DisconnectFB : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DisconnectFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
 
   public static Offset<hololensMulti.DisconnectFB> CreateDisconnectFB(FlatBufferBuilder builder,
-      int PlayerID = 0) {
+      byte PlayerID = 0) {
     builder.StartTable(1);
     DisconnectFB.AddPlayerID(builder, PlayerID);
     return DisconnectFB.EndDisconnectFB(builder);
   }
 
   public static void StartDisconnectFB(FlatBufferBuilder builder) { builder.StartTable(1); }
-  public static void AddPlayerID(FlatBufferBuilder builder, int PlayerID) { builder.AddInt(0, PlayerID, 0); }
+  public static void AddPlayerID(FlatBufferBuilder builder, byte PlayerID) { builder.AddByte(0, PlayerID, 0); }
   public static Offset<hololensMulti.DisconnectFB> EndDisconnectFB(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<hololensMulti.DisconnectFB>(o);

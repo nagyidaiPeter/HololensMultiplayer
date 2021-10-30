@@ -18,7 +18,7 @@ public struct TransformFB : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TransformFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte PlayerID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public hololensMulti.Vec3? Pos { get { int o = __p.__offset(6); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Vec3? QrOffset { get { int o = __p.__offset(8); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public hololensMulti.Quat? Rot { get { int o = __p.__offset(10); return o != 0 ? (hololensMulti.Quat?)(new hololensMulti.Quat()).__assign(o + __p.bb_pos, __p.bb) : null; } }
@@ -34,7 +34,7 @@ public struct TransformFB : IFlatbufferObject
   public hololensMulti.Vec3? LHPointerPos { get { int o = __p.__offset(30); return o != 0 ? (hololensMulti.Vec3?)(new hololensMulti.Vec3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
   public static void StartTransformFB(FlatBufferBuilder builder) { builder.StartTable(14); }
-  public static void AddPlayerID(FlatBufferBuilder builder, int PlayerID) { builder.AddInt(0, PlayerID, 0); }
+  public static void AddPlayerID(FlatBufferBuilder builder, byte PlayerID) { builder.AddByte(0, PlayerID, 0); }
   public static void AddPos(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> PosOffset) { builder.AddStruct(1, PosOffset.Value, 0); }
   public static void AddQrOffset(FlatBufferBuilder builder, Offset<hololensMulti.Vec3> QrOffsetOffset) { builder.AddStruct(2, QrOffsetOffset.Value, 0); }
   public static void AddRot(FlatBufferBuilder builder, Offset<hololensMulti.Quat> RotOffset) { builder.AddStruct(3, RotOffset.Value, 0); }

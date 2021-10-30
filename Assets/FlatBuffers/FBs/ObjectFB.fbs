@@ -5,7 +5,7 @@ namespace hololensMulti;
 table ObjectFB {
   ObjectID:int;
   ObjectType:string;
-  OwnerID:int;
+  OwnerID:ubyte;
   Pos:Vec3;
   Rot:Quat;
   Scale:Vec3;

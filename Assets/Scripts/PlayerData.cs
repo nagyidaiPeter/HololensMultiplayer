@@ -7,7 +7,7 @@ namespace hololensMultiplayer
 {
     public class PlayerData
     {
-        public int ID;
+        public byte ID;
         public NetPeer connection;
         public string Name = "Player";
 

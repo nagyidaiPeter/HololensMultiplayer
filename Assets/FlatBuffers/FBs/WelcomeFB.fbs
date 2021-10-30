@@ -3,7 +3,7 @@
 namespace hololensMulti;
 
 table WelcomeFB {
-  PlayerID:int;
+  PlayerID:ubyte;
   PlayerName:string;
 }
 

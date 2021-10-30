@@ -3,7 +3,7 @@
 namespace hololensMulti;
 
 table DisconnectFB {
-  PlayerID:int;
+  PlayerID:ubyte;
 }
 
 root_type DisconnectFB;

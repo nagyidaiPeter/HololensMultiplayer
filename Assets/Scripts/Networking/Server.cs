@@ -21,7 +21,7 @@ namespace hololensMultiplayer
         public readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         public readonly EventBasedNetListener listener;
 
-        private int ConnectedPlayers = 0;
+        private byte ConnectedPlayers = 0;
         public int maxConnections = 32;
 
         public delegate void NewPeerConnection(NetPeer newPeer);
@@ -52,6 +52,9 @@ namespace hololensMultiplayer
 
         private void PeerConnected(NetPeer peer)
         {
+            if (ConnectedPlayers > byte.MaxValue)
+                ConnectedPlayers = byte.MinValue;;
+
             ConnectedPlayers++;
             var newPlayer = new PlayerData();
             newPlayer.connection = peer;

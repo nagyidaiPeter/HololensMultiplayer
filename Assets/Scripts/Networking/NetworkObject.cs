@@ -13,7 +13,7 @@ using Zenject;
 
 public class NetworkObject : MonoBehaviour
 {
-    public int OwnerID = -1;
+    public byte OwnerID = 0;
     public float InterVel = 35;
     public ObjectData objectData = null;
     public Transform qrPos;
@@ -81,7 +81,7 @@ public class NetworkObject : MonoBehaviour
 
     public void DisclaimObject()
     {
-        OwnerID = -1;
+        OwnerID = 0;
 
         objectData.objectTransform.ObjectID = objectData.objectTransform.ObjectID;
         objectData.objectTransform.OwnerID = OwnerID;
