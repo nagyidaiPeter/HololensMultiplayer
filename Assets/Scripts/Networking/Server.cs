@@ -22,7 +22,6 @@ namespace hololensMultiplayer
         public readonly EventBasedNetListener listener;
 
         private byte ConnectedPlayers = 0;
-        public int maxConnections = 32;
 
         public delegate void NewPeerConnection(NetPeer newPeer);
         public event NewPeerConnection PeerConnectedEvent;

@@ -21,9 +21,7 @@ public class ServerHandler : MonoBehaviour
 
     public bool IsServerRunning = false;
 
-    public string Address = "127.0.0.1:12345";
-
-    public int UpdateRate = 30;
+    public NetworkSettingsObject networkSettings;
 
     private DataManager dataManager;
 
@@ -62,8 +60,7 @@ public class ServerHandler : MonoBehaviour
             server.listener.PeerDisconnectedEvent += PeerDisconnected;
             server.listener.ConnectionRequestEvent += OnConnectionRequest;
 
-            var split = Address.Split(':');
-            server.Start(int.Parse(split[1]));
+            server.Start(networkSettings.ServerPort);
             IsServerRunning = true;
             dataManager.IsServer = true;
 
@@ -105,10 +102,10 @@ public class ServerHandler : MonoBehaviour
 
     private void OnConnectionRequest(ConnectionRequest request)
     {
-        if (server.ConnectedPeersCount < server.maxConnections)
+        if (server.ConnectedPeersCount < networkSettings.MaxConnections)
         {
             Debug.Log("New peer wants to connect!");
-            request.AcceptIfKey("hololensMultiplayer");
+            request.AcceptIfKey(networkSettings.AppKey);
         }
         else
         {
@@ -141,7 +138,7 @@ public class ServerHandler : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(1 / UpdateRate);
+            yield return new WaitForSeconds(networkSettings.NetworkRefreshRate);
         }
     }
 
@@ -150,8 +147,8 @@ public class ServerHandler : MonoBehaviour
         while (server.IsRunning)
         {
             NetDataWriter writer = new NetDataWriter();
-            writer.Put("PV");
-            server.SendBroadcast(writer, 12346);
+            writer.Put(networkSettings.AdvertisementID);
+            server.SendBroadcast(writer, networkSettings.ClientPort);
             yield return new WaitForSeconds(0.5f);
         }
     }

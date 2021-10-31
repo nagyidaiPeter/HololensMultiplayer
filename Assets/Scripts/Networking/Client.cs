@@ -26,6 +26,8 @@ namespace hololensMultiplayer
 
         public bool IsConnected { get; private set; }
 
+        private NetworkSettingsObject networkSettings;
+
         public Client(EventBasedNetListener listener) : base(listener)
         {
             this.listener = listener;
@@ -33,14 +35,15 @@ namespace hololensMultiplayer
             UnconnectedMessagesEnabled = true;
         }
 
-        public new void Start()
+        public new void Start(NetworkSettingsObject networkSettings)
         {
+            this.networkSettings = networkSettings;
             listener.PeerConnectedEvent += PeerConnected;
             listener.PeerDisconnectedEvent += PeerDisconnected;
             listener.NetworkReceiveEvent += NetworkDataReceived;
             listener.NetworkReceiveUnconnectedEvent += OnNetworkReceiveUnconnected;
 
-            base.Start();
+            base.Start(networkSettings.ClientPort);
         }
 
         public new void Stop()
@@ -78,7 +81,7 @@ namespace hololensMultiplayer
 
         public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
-            if (messageType == UnconnectedMessageType.Broadcast && reader.GetString(2) == "PV")
+            if (messageType == UnconnectedMessageType.Broadcast && reader.GetString(networkSettings.AdvertisementID.Length) == networkSettings.AdvertisementID)
             {
                 ServerBroadcastResponseEvent?.Invoke(remoteEndPoint);
             }

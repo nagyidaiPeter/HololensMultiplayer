@@ -594,6 +594,7 @@ MonoBehaviour:
   handedness: 2
   trackedJoint: 2
   IsTracked: 0
+  pointerPos: {x: 0, y: 0, z: 0}
 --- !u!4 &636164914
 Transform:
   m_ObjectHideFlags: 0
@@ -1146,6 +1147,7 @@ MonoBehaviour:
   handedness: 1
   trackedJoint: 2
   IsTracked: 0
+  pointerPos: {x: 0, y: 0, z: 0}
 --- !u!1 &904416874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,9 +1486,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6838714b17b507246b3931418e321e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunningServer: 0
-  Address: 127.0.0.1:12345
-  UpdateTime: 0.01666
+  IsServerRunning: 0
+  networkSettings: {fileID: 11400000, guid: 3debe8252af2fa24d9ec628a3678a100, type: 2}
 --- !u!114 &958257487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1500,7 +1501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClientIsServer: 0
-  UpdateTime: 0.01666
+  networkSettings: {fileID: 11400000, guid: 3debe8252af2fa24d9ec628a3678a100, type: 2}
 --- !u!114 &958257488
 MonoBehaviour:
   m_ObjectHideFlags: 0

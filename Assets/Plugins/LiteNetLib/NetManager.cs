@@ -1330,7 +1330,7 @@ namespace LiteNetLib
         /// </summary>
         public bool Start()
         {
-            return Start(12346);
+            return Start(0);
         }
 
         /// <summary>

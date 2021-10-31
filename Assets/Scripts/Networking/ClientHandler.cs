@@ -25,7 +25,7 @@ public class ClientHandler : MonoBehaviour
     public Client client;
     private DataManager dataManager;
 
-    public int UpdateRate = 30;
+    public NetworkSettingsObject networkSettings;
 
     public Dictionary<MessageTypes, IProcessor> MessageProcessors = new Dictionary<MessageTypes, IProcessor>();
 
@@ -54,7 +54,7 @@ public class ClientHandler : MonoBehaviour
 
     void Start()
     {
-        client.Start();
+        client.Start(networkSettings);
         client.ServerBroadcastResponseEvent += Client_ServerBroadcastResponseEvent;
         StartCoroutine(ClientUpdate());
     }
@@ -62,7 +62,7 @@ public class ClientHandler : MonoBehaviour
     public void Connect(string address)
     {
         var split = address.Split(':');
-        client.Connect(split[0], int.Parse(split[1]), "hololensMultiplayer");        
+        client.Connect(split[0], int.Parse(split[1]), networkSettings.AppKey);
         Debug.Log($"Connecting to {address}");
         StartCoroutine(ClientUpdate());
     }
@@ -76,7 +76,7 @@ public class ClientHandler : MonoBehaviour
     private IEnumerator ClientUpdate()
     {
         while (true)
-        {            
+        {
             client.PollEvents();
 
             foreach (var handlerPair in MessageProcessors)
@@ -85,14 +85,14 @@ public class ClientHandler : MonoBehaviour
                 handlerPair.Value.ProcessOutgoing();
             }
 
-            yield return new WaitForSeconds(1/UpdateRate);
+            yield return new WaitForSeconds(networkSettings.NetworkRefreshRate);
         }
     }
 
 
     private void Client_ServerBroadcastResponseEvent(System.Net.IPEndPoint serverEndpoint)
     {
-        client.Connect(serverEndpoint, "hololensMultiplayer");
+        client.Connect(serverEndpoint, networkSettings.AppKey);
         client.ServerBroadcastResponseEvent -= Client_ServerBroadcastResponseEvent;
         Debug.Log($"Connecting to {serverEndpoint}");
     }

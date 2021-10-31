@@ -9,7 +9,11 @@ public class NetworkSettingsObject : ScriptableObject
 
     public int ClientPort = 12346;
 
-    public int NetworkRefreshRate = 30;
+    public float NetworkRefreshRate = 0.033333f;
 
     public int MaxConnections = 32;
+
+    public string AdvertisementID = "xrM";
+
+    public string AppKey = "xrMultiplayer";
 }
