@@ -1,0 +1,3 @@
+[submodule "Assets/XRMultiplayer-Core"]
+	path = Assets/XRMultiplayer-Core
+	url = https://github.com/nagyidaiPeter/XRMultiplayer-Core.git
