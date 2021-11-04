@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using XRMultiplayer.Networking;
+
 public class ServerMenu : MonoBehaviour
 {
 
