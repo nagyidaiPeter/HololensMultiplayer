@@ -668,6 +668,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8cc4790cca9ac844a97de6eb4f89ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handedness: 2
+  trackedJoint: 2
   IsTracked: 0
   pointerPos: {x: 0, y: 0, z: 0}
 --- !u!4 &636164914
@@ -1215,6 +1217,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8cc4790cca9ac844a97de6eb4f89ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handedness: 1
+  trackedJoint: 2
   IsTracked: 0
   pointerPos: {x: 0, y: 0, z: 0}
 --- !u!1 &904416874
