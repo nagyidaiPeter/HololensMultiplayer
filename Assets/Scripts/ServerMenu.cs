@@ -11,14 +11,13 @@ public class ServerMenu : MonoBehaviour
     private ServerHandler serverHandler;
     private ClientHandler clientHandler;
 
-    public GameObject hostButton, stopButton;
+    public GameObject hostButton, stopButton, clientUI;
 
 
     void Start()
     {
         serverHandler = FindObjectOfType<ServerHandler>();
         clientHandler = FindObjectOfType<ClientHandler>();
-
     }
 
 
@@ -42,5 +41,6 @@ public class ServerMenu : MonoBehaviour
     {
         stopButton.SetActive(false);
         hostButton.SetActive(false);
+        clientUI.SetActive(false);
     }
 }
